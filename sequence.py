@@ -1,3 +1,6 @@
+import math
+
+
 class StringTool:
     def __eq__(self, other):
         pass
@@ -9,18 +12,24 @@ class StringTool:
         pass
 
     @staticmethod
-    def dac(x, y, p):
+    def dac(x, y, f, p):
         m = len(x)
         n = len(y)
         if m <= 2 or n <= 2:
-            StringTool.alignment(x, y, p)
-        pos = n // 2 + 1
-        fs = StringTool.alignment_linear(x, y[:pos])
-        gs = StringTool.alignment_linear(reversed(x), reversed(y[pos + 1:]))
-        k_star = min(sum(fs, reversed(gs)))
-        p.append(k_star)
-        StringTool.dac(x[:k_star], y[:pos], p)
-        StringTool.dac(x[k_star:], y[pos:], p)
+            StringTool.alignment_matrix(x, y, f)
+        pos = math.ceil(n / 2)
+        y1 = y[:pos]
+        y2 = y[pos:]
+        fs = StringTool.alignment_linear(x, y1, f)
+        gs = StringTool.alignment_linear(list(reversed(x)), list(reversed(y2)), f)
+        l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
+        k_star = min(l)
+        k_star_index = l.index(k_star)
+        path = (k_star_index, pos)
+
+        p.append(path)
+        StringTool.dac(x[:k_star_index], y[:pos], f, p)
+        StringTool.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
 
     @staticmethod
     def alignment_linear(x, y, func):
@@ -44,7 +53,24 @@ class StringTool:
         return f
 
     @staticmethod
-    def alignment(x, y, f):
+    def alignment_matrix(x, y, f):
+        m = len(x)
+        n = len(y)
+        M = []
+        StringTool.populate_base(M, m, n)
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1])
+                b = M[i - 1][j][0] + f("", y[j - 1])
+                c = M[i][j - 1][0] + f(x[i - 1], "")
+                vals = [a, b, c]
+                mynn = min(vals)
+                M[i][j] = (mynn, StringTool.get_parent(vals.index(mynn), i, j))
+
+        return M
+
+    @staticmethod
+    def alignment_matrix(x, y, f):
         m = len(x)
         n = len(y)
         M = []
