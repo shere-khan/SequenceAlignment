@@ -108,35 +108,40 @@ class StringTool:
         return 0 if x == y else 1
 
     @staticmethod
-    def unpack_paths(M, m, n, p):
+    def build_alignment(x, y, M, m, n, r1, r2):
         if M is None:
-            return
-        path = (m, n)
-        if path not in p:
-            p.append(path)
-
-        parent_info = M[m][n][1]
+            return 'No alignment'
+        parent_info = M[n][m][1]
         if parent_info is None:
-            return
+            return 'No alignment'
 
         parent_i = parent_info[0]
         parent_j = parent_info[1]
 
-        StringTool.__unpack_paths(M, parent_i, parent_j, p)
+        StringTool.__build_alignment(x, y, M, parent_i, parent_j, r1, r2)
 
     @staticmethod
-    def __unpack_paths(M, i, j, p):
-        p.append((i, j))
+    def __build_alignment(x, y, M, i, j, r1, r2):
+        if i > 0 and j > 0:
+            parent_info = M[i][j][1]
+            StringTool.build_alignment_string(x, y, parent_info[2], i, j, r1, r2)
 
-        parent_info = M[i][j][1]
+            parent_i = parent_info[0]
+            parent_j = parent_info[1]
 
-        if parent_info is None:
-            return
+            StringTool.__build_alignment(x, y, M, parent_i, parent_j, r1, r2)
 
-        parent_i = parent_info[0]
-        parent_j = parent_info[1]
-
-        StringTool.__unpack_paths(M, parent_i, parent_j, p)
+    @staticmethod
+    def build_alignment_string(x, y, path, i, j, r1, r2):
+        if path == 'diag':
+            r1 += x[i]
+            r2 += y[j]
+        if path == 'up':
+            r1 += x[i]
+            r2 += "_"
+        if path == 'left':
+            r1 += "_"
+            r2 += y[j]
 
     @staticmethod
     def unpack_alignment(M, s1, s2, r1, r2):
