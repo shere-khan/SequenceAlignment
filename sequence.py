@@ -9,15 +9,18 @@ class StringTool:
         pass
 
     @staticmethod
-    def alignment_linear(s1, s2):
-        prev = [0] * (len(s1) + 1)
+    def alignment_linear(x, y, f):
+        m = len(x)
+        n = len(y)
+        prev = [i for i in range(n + 1)]
         cur = []
-        for i in range(1, len(s2) + 1):
-            cur = [0]
-            for j in range(1, len(s1) + 1):
-                a = prev[j - 1] + StringTool.__cost(s2[i - 1], s1[j - 1])
-                b = cur[-1] + StringTool.__cost(s2[i - 1], "")
-                c = prev[j] + StringTool.__cost("", s1[j - 1])
+        for i in range(1, m + 1):
+            cur = [prev[0] + 1]
+            for j in range(1, n + 1):
+                a = prev[j - 1] + f(x[i - 1], y[j - 1])
+                # print(i, j)
+                b = cur[-1] + f("", y[j - 1])
+                c = prev[j] + f(x[i - 1], "")
                 cur.append(min(a, b, c))
 
             prev = cur
@@ -25,16 +28,16 @@ class StringTool:
         return cur[-1]
 
     @staticmethod
-    def alignment(s1, s2, f):
-        n = len(s1)
-        m = len(s2)
+    def alignment(x, y, f):
+        n = len(x)
+        m = len(y)
         M = []
         StringTool.populate_base(M, m, n)
         for i in range(1, n + 1):
             for j in range(1, m + 1):
-                a = M[i - 1][j - 1][0] + f(s1[i - 1], s2[j - 1])
-                b = M[i - 1][j][0] + f("", s2[j - 1])
-                c = M[i][j - 1][0] + f(s1[i - 1], "")
+                a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1])
+                b = M[i - 1][j][0] + f("", y[j - 1])
+                c = M[i][j - 1][0] + f(x[i - 1], "")
                 vals = [a, b, c]
                 mynn = min(vals)
                 M[i][j] = (mynn, StringTool.get_parent(vals.index(mynn), i, j))
@@ -84,6 +87,7 @@ class StringTool:
         r2 += res[1]
 
         r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
+
         return r1, r2
 
     @staticmethod
@@ -95,10 +99,12 @@ class StringTool:
             if parent_info[2] == 'up':
                 r1 = s1[i - 1] + r1
                 r2 = "_" + r2
+
                 return r1, r2
 
             r1 = "_" + r1
             r2 = s2[j - 1] + r2
+
             return r1, r2
 
         res = StringTool.get_string(s1, s2, parent_info[2], i, j)
@@ -110,6 +116,7 @@ class StringTool:
         parent = M[parent_i][parent_j][1]
 
         r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
+
         return r1, r2
 
     @staticmethod

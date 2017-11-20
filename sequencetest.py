@@ -8,17 +8,15 @@ class TestStringAlignment(unittest.TestCase):
         self.s = sequence.StringTool()
 
     def test_alignment_linear(self):
-        s1 = "ACTGAABXUAXCY"
-        s2 = "RABTAAABXCAAACZQQ"
-        alignment = sequence.StringTool.alignment_linear(s1, s2)
+        s1 = 'AGGCTATCACCTGACCTCCAGGCCGATGCCC'
+        s2 = 'TAGCTATCACGACCGCGGTCGATTTGCCCGAC'
+        f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
+        alignment = sequence.StringTool.alignment_linear(s1, s2, f)
         print(alignment)
 
     def test_alignment(self):
-        # s1 = 'AGGCTATCACCTGACCTCCAGGCCGATGCCC'
-        # s2 = 'TAGCTATCACGACCGCGGTCGATTTGCCCGAC'
-
-        s1 = 'ACTGAABXUAXCY'
-        s2 = 'RABTAAABXCAAACZQQ'
+        s1 = 'AGGCTATCACCTGACCTCCAGGCCGATGCCC'
+        s2 = 'TAGCTATCACGACCGCGGTCGATTTGCCCGAC'
 
         f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
 
