@@ -29,12 +29,12 @@ class StringTool:
 
     @staticmethod
     def alignment(x, y, f):
-        n = len(x)
-        m = len(y)
+        m = len(x)
+        n = len(y)
         M = []
         StringTool.populate_base(M, m, n)
-        for i in range(1, n + 1):
-            for j in range(1, m + 1):
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
                 a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1])
                 b = M[i - 1][j][0] + f("", y[j - 1])
                 c = M[i][j - 1][0] + f(x[i - 1], "")
@@ -46,8 +46,8 @@ class StringTool:
 
     @staticmethod
     def populate_base(M, m, n):
-        for i in range(0, n + 1):
-            for j in range(0, m + 1):
+        for i in range(0, m + 1):
+            for j in range(0, n + 1):
                 if i == 0 and j == 0:
                     M.append([(i, None)])
                 elif i == 0 and j > 0:

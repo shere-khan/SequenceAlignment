@@ -10,7 +10,9 @@ class TestStringAlignment(unittest.TestCase):
     def test_alignment_linear(self):
         s1 = 'AGGCTATCACCTGACCTCCAGGCCGATGCCC'
         s2 = 'TAGCTATCACGACCGCGGTCGATTTGCCCGAC'
+
         f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
+
         alignment = sequence.StringTool.alignment_linear(s1, s2, f)
         print(alignment)
 
