@@ -53,19 +53,20 @@ class StringTool:
         return f
 
     @staticmethod
-    def alignment(x, y, f):
+    def alignment(x, y, f, p):
         m = len(x)
         n = len(y)
         M = []
         StringTool.populate_base(M, m, n)
         for i in range(1, m + 1):
             for j in range(1, n + 1):
-                a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1])
-                b = M[i - 1][j][0] + f("", y[j - 1])
-                c = M[i][j - 1][0] + f(x[i - 1], "")
+                a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1])
+                b = M[i - 1][j] + f("", y[j - 1])
+                c = M[i][j - 1] + f(x[i - 1], "")
                 vals = [a, b, c]
                 mynn = min(vals)
-                M[i][j] = (mynn, StringTool.get_parent(vals.index(mynn), i, j))
+                M[i][j] = mynn
+                StringTool.get_path(vals.index(mynn), i, j)
 
         return M
 
@@ -74,13 +75,13 @@ class StringTool:
         for i in range(0, m + 1):
             for j in range(0, n + 1):
                 if i == 0 and j == 0:
-                    M.append([(i, None)])
+                    M.append([i])
                 elif i == 0 and j > 0:
-                    M[i].append((j, (i, j - 1, 'left')))
+                    M[i].append(j)
                 elif i > 0 and j == 0:
-                    M.append([(i, (i - 1, j, 'up'))])
+                    M.append([i])
                 else:
-                    M[i].append((0, None))
+                    M[i].append(0)
 
     @staticmethod
     def alignment_matrix(x, y, f):
@@ -126,6 +127,36 @@ class StringTool:
         return 0 if x == y else 1
 
     @staticmethod
+    def unpack_paths(M, m, n, p):
+        if M is None:
+            return
+
+        p.append((m, n))
+
+        parent_info = M[m][n][1]
+        if parent_info is None:
+            return
+
+        parent_i = parent_info[0]
+        parent_j = parent_info[1]
+
+        StringTool.__unpack_paths(M, parent_i, parent_j, p)
+
+    @staticmethod
+    def __unpack_paths(M, i, j, p):
+        p.append((i, j))
+
+        parent_info = M[i][j][1]
+
+        if parent_info is None:
+            return
+
+        parent_i = parent_info[0]
+        parent_j = parent_info[1]
+
+        StringTool.__unpack_paths(M, parent_i, parent_j, p)
+
+    @staticmethod
     def unpack_alignment(M, s1, s2, r1, r2):
         if M is None:
             return 'No alignment'
@@ -168,7 +199,6 @@ class StringTool:
 
         parent_i = parent_info[0]
         parent_j = parent_info[1]
-        parent = M[parent_i][parent_j][1]
 
         r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
 
