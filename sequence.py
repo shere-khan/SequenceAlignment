@@ -2,6 +2,10 @@ import math
 
 
 class StringTool:
+    def __init__(self):
+        self.r1 = ""
+        self.r2 = ""
+
     def __eq__(self, other):
         pass
 
@@ -11,25 +15,28 @@ class StringTool:
     def __str__(self):
         pass
 
-    @staticmethod
-    def dac(x, y, f, p):
+    def dac(self, x, y, f, p):
         m = len(x)
         n = len(y)
         if m <= 2 or n <= 2:
-            StringTool.alignment_matrix(x, y, f)
-        pos = math.ceil(n / 2)
-        y1 = y[:pos]
-        y2 = y[pos:]
-        fs = StringTool.alignment_linear(x, y1, f)
-        gs = StringTool.alignment_linear(list(reversed(x)), list(reversed(y2)), f)
-        l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
-        k_star = min(l)
-        k_star_index = l.index(k_star)
-        path = (k_star_index, pos)
+            M = StringTool.alignment(x, y, f)
+            self.r1, self.r2 = StringTool.unpack_alignment(M, x, y, self.r1, self.r2)
+            print()
 
-        p.append(path)
-        StringTool.dac(x[:k_star_index], y[:pos], f, p)
-        StringTool.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
+        else:
+            pos = math.ceil(n / 2)
+            y1 = y[:pos]
+            y2 = y[pos:]
+            fs = StringTool.alignment_linear(x, y1, f)
+            gs = StringTool.alignment_linear(list(reversed(x)), list(reversed(y2)), f)
+            l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
+            k_star = min(l)
+            k_star_index = l.index(k_star)
+            path = (k_star_index, pos)
+
+            p.append(path)
+            self.dac(x[:k_star_index], y[:pos], f, p)
+            self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
 
     @staticmethod
     def alignment_linear(x, y, func):
@@ -53,42 +60,11 @@ class StringTool:
         return f
 
     @staticmethod
-    def alignment(x, y, f, p):
+    def alignment(x, y, f):
         m = len(x)
         n = len(y)
         M = []
         StringTool.populate_base(M, m, n)
-        for i in range(1, m + 1):
-            for j in range(1, n + 1):
-                a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1])
-                b = M[i - 1][j] + f("", y[j - 1])
-                c = M[i][j - 1] + f(x[i - 1], "")
-                vals = [a, b, c]
-                mynn = min(vals)
-                M[i][j] = mynn
-                StringTool.get_path(vals.index(mynn), i, j)
-
-        return M
-
-    @staticmethod
-    def populate_base(M, m, n):
-        for i in range(0, m + 1):
-            for j in range(0, n + 1):
-                if i == 0 and j == 0:
-                    M.append([i])
-                elif i == 0 and j > 0:
-                    M[i].append(j)
-                elif i > 0 and j == 0:
-                    M.append([i])
-                else:
-                    M[i].append(0)
-
-    @staticmethod
-    def alignment_matrix(x, y, f):
-        m = len(x)
-        n = len(y)
-        M = []
-        StringTool.populate_base_matrix(M, m, n)
         for i in range(1, m + 1):
             for j in range(1, n + 1):
                 a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1])
@@ -101,7 +77,7 @@ class StringTool:
         return M
 
     @staticmethod
-    def populate_base_matrix(M, m, n):
+    def populate_base(M, m, n):
         for i in range(0, m + 1):
             for j in range(0, n + 1):
                 if i == 0 and j == 0:
@@ -130,8 +106,9 @@ class StringTool:
     def unpack_paths(M, m, n, p):
         if M is None:
             return
-
-        p.append((m, n))
+        path = (m, n)
+        if path not in p:
+            p.append(path)
 
         parent_info = M[m][n][1]
         if parent_info is None:
