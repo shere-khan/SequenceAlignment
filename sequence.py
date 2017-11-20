@@ -20,6 +20,8 @@ class StringTool:
         n = len(y)
         if m <= 2 or n <= 2:
             M = StringTool.alignment(x, y, f)
+            self.r1 = self.r1[:-1]
+            self.r2 = self.r2[:-1]
             r1, r2 = StringTool.build_alignment(x, y, M, "", "")
             self.r1 += r1
             self.r2 += r2
@@ -114,7 +116,7 @@ class StringTool:
 
         parent_i = parent_info[0]
         parent_j = parent_info[1]
-        # r1, r2 = StringTool.build_alignment_string(x, y, parent_info[2], m, n, r1, r2)
+        r1, r2 = StringTool.build_alignment_string(x, y, parent_info[2], m, n, r1, r2)
 
         r1, r2 = StringTool.__build_alignment(x, y, M, parent_i, parent_j, r1, r2)
 
