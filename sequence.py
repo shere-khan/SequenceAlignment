@@ -9,23 +9,39 @@ class StringTool:
         pass
 
     @staticmethod
-    def alignment_linear(x, y, f):
+    def dac(x, y, p):
+        m = len(x)
+        n = len(y)
+        if m <= 2 or n <= 2:
+            StringTool.alignment(x, y, p)
+        pos = n // 2 + 1
+        fs = StringTool.alignment_linear(x, y[:pos])
+        gs = StringTool.alignment_linear(reversed(x), reversed(y[pos + 1:]))
+        k_star = min(sum(fs, reversed(gs)))
+        p.append(k_star)
+        StringTool.dac(x[:k_star], y[:pos], p)
+        StringTool.dac(x[k_star:], y[pos:], p)
+
+    @staticmethod
+    def alignment_linear(x, y, func):
         m = len(x)
         n = len(y)
         prev = [i for i in range(n + 1)]
-        cur = []
+        f = list()
+        f.append(prev[-1])
         for i in range(1, m + 1):
             cur = [prev[0] + 1]
             for j in range(1, n + 1):
-                a = prev[j - 1] + f(x[i - 1], y[j - 1])
+                a = prev[j - 1] + func(x[i - 1], y[j - 1])
                 # print(i, j)
-                b = cur[-1] + f("", y[j - 1])
-                c = prev[j] + f(x[i - 1], "")
+                b = cur[-1] + func("", y[j - 1])
+                c = prev[j] + func(x[i - 1], "")
                 cur.append(min(a, b, c))
 
+            f.append(cur[-1])
             prev = cur
 
-        return cur[-1]
+        return f
 
     @staticmethod
     def alignment(x, y, f):
@@ -129,6 +145,13 @@ class StringTool:
         if s == 'left':
             # return s1[i], s2[j - 1]
             return "_", s2[j - 1]
+
+    @staticmethod
+    def print_matrix(M):
+        for row in M:
+            for x in row:
+                print(x[0], end=" ")
+            print()
 
 
 class StringCreator:
