@@ -20,8 +20,13 @@ class StringTool:
         n = len(y)
         if m <= 2 or n <= 2:
             M = StringTool.alignment(x, y, f)
-            self.r1, self.r2 = StringTool.unpack_alignment(M, x, y, self.r1, self.r2)
-            print()
+            r1, r2 = StringTool.unpack_alignment(M, x, y, self.r1, self.r2)
+
+            self.r1 = r1
+            self.r2 = r2
+
+            # print(r1)
+            # print(r2)
 
         else:
             pos = math.ceil(n / 2)
