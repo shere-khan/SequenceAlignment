@@ -75,6 +75,7 @@ class StringTool:
                 a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1])
                 b = M[i - 1][j][0] + f("", y[j - 1])
                 c = M[i][j - 1][0] + f(x[i - 1], "")
+
                 vals = [a, b, c]
                 mynn = min(vals)
                 M[i][j] = (mynn, StringTool.get_parent(vals.index(mynn), i, j))
