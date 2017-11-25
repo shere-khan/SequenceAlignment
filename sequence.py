@@ -41,6 +41,44 @@ class StringTool:
             self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
 
     @staticmethod
+    def local_alignment_path(x, y, f):
+        b1 = StringTool.local_alignment_linear_number(x, y, f)
+        b2 = StringTool.local_alignment_linear_number(list(reversed(x)), list(reversed(y)), f)
+
+        xi = b1[1][1]
+        xj = b2[1][0]
+
+        yi = b1[1][1]
+        yj = b2[1][0]
+
+        xij = x[xi:xj]
+        yij = y[yi:yj]
+
+        return xij, yij
+
+    @staticmethod
+    def local_alignment_linear_number(x, y, func):
+        m = len(x)
+        n = len(y)
+        prev = [0 for i in range(n + 1)]
+        best = (0, (0, 0))
+        for i in range(1, m + 1):
+            cur = [prev[0]]
+            for j in range(1, n + 1):
+                a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
+                b = cur[-1] + func("", y[j - 1], 'indel')
+                c = prev[j] + func(x[i - 1], '', 'indel')
+                v = max(a, b, c, 0)
+                cur.append(v)
+
+                if best[0] < v:
+                    best = (v, (i, j))
+
+            prev = cur
+
+        return best
+
+    @staticmethod
     def alignment_linear(x, y, func):
         m = len(x)
         n = len(y)
