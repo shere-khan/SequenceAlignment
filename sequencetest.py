@@ -30,7 +30,7 @@ class TestStringAlignment(unittest.TestCase):
         xij, yij = self.s.local_alignment_linear_number(x, y, f)
 
         p = list()
-        self.s.dac(x, y, f, p)
+        self.s.dac(xij, yij, f, p)
 
         print(self.s.r1)
         print(self.s.r2)
