@@ -8,17 +8,36 @@ class TestStringAlignment(unittest.TestCase):
         self.s = sequence.StringTool()
 
     def test_alignment_linear_with_path(self):
-        # x = 'AGGCTATCACCTGACCTCCAGGCCGATGCCCXXR'
-        # y = 'TAGCTATCACGACCGCGGTCGATTTGCCCGACX'
-        x = 'ACAGATTA'
-        y = 'TAGCTTA'
+        x = 'AGGCTATCACCTGACCTCCAGGCCGATGCCCXXR'
+        y = 'TAGCTATCACGACCGCGGTCGATTTGCCCGACX'
+        # x = 'ACAGATTA'
+        # y = 'TAGCTTA'
 
-        f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
+        # f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
+        f = self.create_cost_function()
         p = list()
         self.s.dac(x, y, f, p)
 
         print(self.s.r1)
         print(self.s.r2)
+
+    @staticmethod
+    def create_cost_function():
+        mismatch = input('Enter mismatch score: ')
+        match = input('Enter match score: ')
+        indel = input('Enter insert/delete score: ')
+
+        def cost(x, y, type):
+            if type == 'indel':
+                if x == '' or y == '':
+                    return int(indel)
+            if type == 'match-mismatch':
+                if x == y:
+                    return int(match)
+                if x != y:
+                    return int(mismatch)
+
+        return cost
 
     # def test_dac_unpack_paths(self):
         # x = 'AGGCTATCACCTGACCTCCAGGCCGATGCCCXXR'

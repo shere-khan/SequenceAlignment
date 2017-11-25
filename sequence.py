@@ -50,10 +50,9 @@ class StringTool:
         for i in range(1, m + 1):
             cur = [prev[0] + 1]
             for j in range(1, n + 1):
-                a = prev[j - 1] + func(x[i - 1], y[j - 1])
-                # print(i, j)
-                b = cur[-1] + func("", y[j - 1])
-                c = prev[j] + func(x[i - 1], "")
+                a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
+                b = cur[-1] + func("", y[j - 1], 'indel')
+                c = prev[j] + func(x[i - 1], '', 'indel')
                 cur.append(min(a, b, c))
 
             f.append(cur[-1])
@@ -69,9 +68,9 @@ class StringTool:
         StringTool.populate_base(M, m, n)
         for i in range(1, m + 1):
             for j in range(1, n + 1):
-                a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1])
-                b = M[i - 1][j][0] + f("", y[j - 1])
-                c = M[i][j - 1][0] + f(x[i - 1], "")
+                a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1], 'match-mismatch')
+                b = M[i - 1][j][0] + f("", y[j - 1], 'indel')
+                c = M[i][j - 1][0] + f(x[i - 1], '', 'indel')
 
                 vals = [a, b, c]
                 mynn = min(vals)
