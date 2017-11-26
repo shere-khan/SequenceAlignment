@@ -1,4 +1,4 @@
-import math
+import math, random
 
 
 class StringTool:
@@ -32,7 +32,7 @@ class StringTool:
             fs = StringTool.alignment_linear(x, y1, f)
             gs = StringTool.alignment_linear(list(reversed(x)), list(reversed(y2)), f)
             l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
-            k_star = min(l)
+            k_star = max(l)
             k_star_index = l.index(k_star)
             path = (k_star_index, pos)
 
@@ -67,8 +67,8 @@ class StringTool:
                 a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1], 'match-mismatch')
                 b = M[i - 1][j] + f("", y[j - 1], 'indel')
                 c = M[i][j - 1] + f(x[i - 1], "", 'indel')
-                maxi = max(a, b, c, 0)
-                M[i][j] = maxi
+                maxx = max(a, b, c, 0)
+                M[i][j] = maxx
 
         print('acc: ' + str(acc))
         return M
@@ -108,7 +108,7 @@ class StringTool:
                 a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
                 b = cur[-1] + func("", y[j - 1], 'indel')
                 c = prev[j] + func(x[i - 1], '', 'indel')
-                cur.append(min(a, b, c))
+                cur.append(max(a, b, c))
 
             f.append(cur[-1])
             prev = cur
@@ -128,8 +128,8 @@ class StringTool:
                 c = M[i][j - 1][0] + f(x[i - 1], '', 'indel')
 
                 vals = [a, b, c]
-                mynn = min(vals)
-                M[i][j] = (mynn, StringTool.get_parent(vals.index(mynn), i, j))
+                maxx = max(vals)
+                M[i][j] = (maxx, StringTool.get_parent(vals.index(maxx), i, j))
 
         return M
 
@@ -268,6 +268,10 @@ class StringTool:
             for x in row:
                 print(x, end=" ")
             print()
+
+    @staticmethod
+    def sequence_generator(n, letters):
+        return [random.choice(letters) for i in range(n)]
 
 
 class StringCreator:

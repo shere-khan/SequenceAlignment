@@ -20,39 +20,34 @@ class TestStringAlignment(unittest.TestCase):
     #     print(best)
 
     def test_local_alignment_linear_path(self):
-        x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-        y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+        # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
+        # y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
 
-        # x = 'ACAGATTA'
-        # y = 'TAGCTTA'
+        l = 1000
+        x = sequence.StringTool.sequence_generator(l, 'ACTG')
+        y = sequence.StringTool.sequence_generator(l, 'ACTG')
 
-        # x = 'PAACGGGCQ'
-        # y = 'ACAGGGCQT'
+        print('x: ' + ''.join(x))
+        print('y: ' + ''.join(y))
 
-        # f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
         f = self.create_cost_function()
-        # xij, yij = self.s.local_alignment_path(x, y, f)
         p = list()
-        # self.s.dac(xij, yij, f, p)
         self.s.dac(x, y, f, p)
 
         print(self.s.r1)
         print(self.s.r2)
 
-        # res1 = self.s.local_alignment(x, y, f)
-        # res2 = self.s.local_alignment(list(reversed(x)), list(reversed(y)), f)
+    # def test_local_alignment(self):
+    #     l = 30
+    #     x = sequence.StringTool.sequence_generator(l, 'ACTG')
+    #     y = sequence.StringTool.sequence_generator(l, 'ACTG')
+    #     f = self.create_cost_function()
+    #     xij, yij = self.s.local_alignment_path(x, y, f)
+    #     p = list()
+    #     self.s.dac(xij, yij, f, p)
+    #     print(self.s.r1)
+    #     print(self.s.r2)
 
-        # print("Alignment 1")
-        # sequence.StringTool.print_matrix(res1)
-        # print("Alignment 2")
-        # sequence.StringTool.print_matrix(res2)
-
-        #
-        # p = list()
-        # self.s.dac(xij, yij, f, p)
-        #
-        # print(self.s.r1)
-        # print(self.s.r2)
 
     # def test_alignment_linear_with_path(self):
     #     x = 'AGGCTATCACCTGACCTCCAGGCCGATGCCCXXR'
@@ -156,7 +151,6 @@ class TestStringAlignment(unittest.TestCase):
     #     alignment = sequence.StringTool.alignment_linear(x, y, f)
     #     # print(alignment[-1])
     #     print(alignment)
-
 
 if __name__ == '__main__':
     unittest.main()
