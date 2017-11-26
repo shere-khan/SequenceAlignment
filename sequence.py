@@ -34,11 +34,11 @@ class StringTool:
             l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
             k_star = min(l)
             k_star_index = l.index(k_star)
-        path = (k_star_index, pos)
+            path = (k_star_index, pos)
 
-        p.append(path)
-        self.dac(x[:k_star_index], y[:pos], f, p)
-        self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
+            p.append(path)
+            self.dac(x[:k_star_index], y[:pos], f, p)
+            self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
 
     @staticmethod
     def local_alignment_path(x, y, f):
@@ -48,11 +48,11 @@ class StringTool:
         xi = len(x) - b2[1][0]
         xj = b1[1][0]
 
-        yi = len(y) - b2[1][0]
+        yi = len(y) - b2[1][1]
         yj = b1[1][1]
 
-        xij = x[xi:xj]
-        yij = y[yi:yj]
+        xij = x[xi:xj + 1]
+        yij = y[yi:yj + 1]
 
         return xij, yij
 

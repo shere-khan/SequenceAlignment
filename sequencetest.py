@@ -20,23 +20,32 @@ class TestStringAlignment(unittest.TestCase):
     #     print(best)
 
     def test_local_alignment_linear_path(self):
-        # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-        # y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+        x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
+        y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+
         # x = 'ACAGATTA'
         # y = 'TAGCTTA'
-        x = 'PAACGGGCQ'
-        y = 'ACAGGGCQT'
+
+        # x = 'PAACGGGCQ'
+        # y = 'ACAGGGCQT'
 
         # f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
         f = self.create_cost_function()
         # xij, yij = self.s.local_alignment_path(x, y, f)
-        res1 = self.s.local_alignment(x, y, f)
-        res2 = self.s.local_alignment(list(reversed(x)), list(reversed(y)), f)
+        p = list()
+        # self.s.dac(xij, yij, f, p)
+        self.s.dac(x, y, f, p)
 
-        print("Alignment 1")
-        sequence.StringTool.print_matrix(res1)
-        print("Alignment 2")
-        sequence.StringTool.print_matrix(res2)
+        print(self.s.r1)
+        print(self.s.r2)
+
+        # res1 = self.s.local_alignment(x, y, f)
+        # res2 = self.s.local_alignment(list(reversed(x)), list(reversed(y)), f)
+
+        # print("Alignment 1")
+        # sequence.StringTool.print_matrix(res1)
+        # print("Alignment 2")
+        # sequence.StringTool.print_matrix(res2)
 
         #
         # p = list()
