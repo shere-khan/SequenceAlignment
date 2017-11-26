@@ -160,37 +160,6 @@ class StringTool:
         return 0 if x == y else 1
 
     @staticmethod
-    def build_alignment(x, y, M, r1, r2):
-        if M is None:
-            return 'No alignment'
-        m = len(x)
-        n = len(y)
-        parent_info = M[m][n][1]
-        if parent_info is None:
-            return 'No alignment'
-
-        parent_i = parent_info[0]
-        parent_j = parent_info[1]
-        r1, r2 = StringTool.build_alignment_string(x, y, parent_info[2], m, n, r1, r2)
-
-        r1, r2 = StringTool.__build_alignment(x, y, M, parent_i, parent_j, r1, r2)
-
-        return r1, r2
-
-    @staticmethod
-    def __build_alignment(x, y, M, i, j, r1, r2):
-        if i > 0 or j > 0:
-            parent_info = M[i][j][1]
-            r1, r2 = StringTool.build_alignment_string(x, y, parent_info[2], i, j, r1, r2)
-
-            parent_i = parent_info[0]
-            parent_j = parent_info[1]
-
-            r1, r2 = StringTool.__build_alignment(x, y, M, parent_i, parent_j, r1, r2)
-
-        return r1, r2
-
-    @staticmethod
     def build_alignment_iter(x, y, M, r1, r2):
         i = len(x)
         j = len(y)
