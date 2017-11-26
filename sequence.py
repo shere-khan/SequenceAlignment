@@ -191,6 +191,24 @@ class StringTool:
         return r1, r2
 
     @staticmethod
+    def build_alignment_iter(x, y, M, r1, r2):
+        i = len(x)
+        j = len(y)
+        while i > 0 or j > 0:
+            parent_info = M[i][j][1]
+            r1, r2 = StringTool.build_alignment_string(x, y, parent_info[2], i, j, r1, r2)
+
+            parent_i = parent_info[0]
+            parent_j = parent_info[1]
+
+            r1, r2 = StringTool.__build_alignment(x, y, M, parent_i, parent_j, r1, r2)
+
+            i = parent_i
+            j = parent_j
+
+        return r1, r2
+
+    @staticmethod
     def build_alignment_string(x, y, path, i, j, r1, r2):
         if path == 'diag':
             r1 = x[i - 1] + r1
@@ -201,54 +219,6 @@ class StringTool:
         elif path == 'left':
             r1 = "_" + r1
             r2 = y[j - 1] + r2
-        return r1, r2
-
-    @staticmethod
-    def unpack_alignment(M, s1, s2, r1, r2):
-        if M is None:
-            return 'No alignment'
-        n = len(s1)
-        m = len(s2)
-        parent_info = M[n][m][1]
-        if parent_info is None:
-            return 'No alignment'
-
-        parent_i = parent_info[0]
-        parent_j = parent_info[1]
-        res = StringTool.get_string(s1, s2, parent_info[2], n, m)
-        r1 += res[0]
-        r2 += res[1]
-
-        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
-
-        return r1, r2
-
-    @staticmethod
-    def __unpack_alignment(M, i, j, s1, s2, r1, r2):
-        parent_info = M[i][j][1]
-        if parent_info is None:
-            return r1, r2
-        if parent_info[0] == parent_info[1] == 0:
-            if parent_info[2] == 'up':
-                r1 = s1[i - 1] + r1
-                r2 = "_" + r2
-
-                return r1, r2
-
-            r1 = "_" + r1
-            r2 = s2[j - 1] + r2
-
-            return r1, r2
-
-        res = StringTool.get_string(s1, s2, parent_info[2], i, j)
-        r1 = res[0] + r1
-        r2 = res[1] + r2
-
-        parent_i = parent_info[0]
-        parent_j = parent_info[1]
-
-        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
-
         return r1, r2
 
     @staticmethod
