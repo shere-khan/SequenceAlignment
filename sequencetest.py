@@ -20,12 +20,12 @@ class TestStringAlignment(unittest.TestCase):
     #     print(best)
 
     def test_local_alignment_linear_path(self):
-        # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-        # y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+        x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
+        y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
 
         l = 1000
-        x = sequence.StringTool.sequence_generator(l, 'ACTG')
-        y = sequence.StringTool.sequence_generator(l, 'ACTG')
+        # x = sequence.StringTool.sequence_generator(l, 'ACTG')
+        # y = sequence.StringTool.sequence_generator(l, 'ACTG')
 
         print('x: ' + ''.join(x))
         print('y: ' + ''.join(y))

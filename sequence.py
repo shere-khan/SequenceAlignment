@@ -22,7 +22,7 @@ class StringTool:
             M = StringTool.alignment(x, y, f)
             self.r1 = self.r1[:-1]
             self.r2 = self.r2[:-1]
-            r1, r2 = StringTool.build_alignment(x, y, M, "", "")
+            r1, r2 = StringTool.build_alignment_iter(x, y, M, "", "")
             self.r1 += r1
             self.r2 += r2
         else:
@@ -200,8 +200,6 @@ class StringTool:
 
             parent_i = parent_info[0]
             parent_j = parent_info[1]
-
-            r1, r2 = StringTool.__build_alignment(x, y, M, parent_i, parent_j, r1, r2)
 
             i = parent_i
             j = parent_j
