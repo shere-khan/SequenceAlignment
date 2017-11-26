@@ -20,22 +20,42 @@ class TestStringAlignment(unittest.TestCase):
     #     print(best)
 
     def test_local_alignment_linear_path(self):
-        # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-        # y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+        # l = 500
+        # x = sequence.StringTool.sequence_generator(l, 'ACTG')
+        # y = sequence.StringTool.sequence_generator(l, 'ACTG')
 
-        l = 2000
-        x = sequence.StringTool.sequence_generator(l, 'ACTG')
-        y = sequence.StringTool.sequence_generator(l, 'ACTG')
+        x = 'AGGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQAHLFKFAOVUHAIBADALSDKLHBASDGFAVDLABVDKLABKLJDVBALKSD'
+        y = 'TAGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACXXXXRRRYZZZ'
 
         print('x: ' + ''.join(x))
         print('y: ' + ''.join(y))
 
         f = self.create_cost_function()
         p = list()
-        self.s.dac(x, y, f, p)
+        xij, yij = self.s.local_alignment_path(x, y, f)
+
+        self.s.dac(xij, yij, f, p)
 
         print(self.s.r1)
         print(self.s.r2)
+
+    # def test_alignment_global_large_number(self):
+    #     # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
+    #     # y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+    #
+    #     l = 2000
+    #     x = sequence.StringTool.sequence_generator(l, 'ACTG')
+    #     y = sequence.StringTool.sequence_generator(l, 'ACTG')
+    #
+    #     print('x: ' + ''.join(x))
+    #     print('y: ' + ''.join(y))
+    #
+    #     f = self.create_cost_function()
+    #     p = list()
+    #     self.s.dac(x, y, f, p)
+    #
+    #     print(self.s.r1)
+    #     print(self.s.r2)
 
     @staticmethod
     def create_cost_function():

@@ -41,15 +41,44 @@ class StringTool:
             self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
 
     @staticmethod
+    def dac_iter(self, x, y, f, p):
+        m = len(x)
+        n = len(y)
+        if m <= 2 or n <= 2:
+            M = StringTool.alignment(x, y, f)
+            self.r1 = self.r1[:-1]
+            self.r2 = self.r2[:-1]
+            r1, r2 = StringTool.build_alignment_iter(x, y, M, "", "")
+            self.r1 += r1
+            self.r2 += r2
+        else:
+            pos = math.ceil(n / 2)
+            y1 = y[:pos]
+            y2 = y[pos:]
+            fs = StringTool.alignment_linear(x, y1, f)
+            gs = StringTool.alignment_linear(list(reversed(x)), list(reversed(y2)), f)
+            l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
+            k_star = max(l)
+            k_star_index = l.index(k_star)
+            path = (k_star_index, pos)
+
+            p.append(path)
+            self.dac(x[:k_star_index], y[:pos], f, p)
+            self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
+
+    @staticmethod
     def local_alignment_path(x, y, f):
         b1 = StringTool.local_alignment_linear_number(x, y, f)
-        b2 = StringTool.local_alignment_linear_number(list(reversed(x)), list(reversed(y)), f)
-
-        xi = len(x) - b2[1][0]
-        xj = b1[1][0]
-
-        yi = len(y) - b2[1][1]
+        bound = b1[0]
         yj = b1[1][1]
+        xj = b1[1][0]
+        x1 = x[:xj + 1]
+        y1 = y[:yj + 1]
+        b2 = StringTool.local_alignment_search(list(reversed(x1)), list(reversed(y1)), f, bound)
+
+        xi = len(x1) - b2[1][0]
+
+        yi = len(y1) - b2[1][1]
 
         xij = x[xi:xj + 1]
         yij = y[yi:yj + 1]
@@ -90,6 +119,29 @@ class StringTool:
 
                 if best[0] < v:
                     best = (v, (i, j))
+
+            prev = cur
+
+        return best
+
+    @staticmethod
+    def local_alignment_search(x, y, func, bound):
+        m = len(x)
+        n = len(y)
+        prev = [0 for i in range(n + 1)]
+        best = (0, (0, 0))
+        for i in range(1, m + 1):
+            cur = [prev[0]]
+            for j in range(1, n + 1):
+                a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
+                b = cur[-1] + func("", y[j - 1], 'indel')
+                c = prev[j] + func(x[i - 1], '', 'indel')
+                v = max(a, b, c, 0)
+                cur.append(v)
+
+                if v == bound:
+                    best = (v, (i, j))
+                    break
 
             prev = cur
 
