@@ -7,33 +7,43 @@ class TestStringAlignment(unittest.TestCase):
     def setUp(self):
         self.s = sequence.StringTool()
 
-    def test_alignment_linear_number(self):
-        x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-        y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
-        # x = 'ACAGATTA'
-        # y = 'TAGCTTA'
-
-        # f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
-        f = self.create_cost_function()
-        best = self.s.local_alignment_linear_number(x, y, f)
-
-        print(best)
+    # def test_alignment_linear_number(self):
+    #     x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
+    #     y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+    #     # x = 'ACAGATTA'
+    #     # y = 'TAGCTTA'
+    #
+    #     # f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
+    #     f = self.create_cost_function()
+    #     best = self.s.local_alignment_linear_number(x, y, f)
+    #
+    #     print(best)
 
     def test_local_alignment_linear_path(self):
-        x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-        y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
+        # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
+        # y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
         # x = 'ACAGATTA'
         # y = 'TAGCTTA'
+        x = 'PAACGGGCQ'
+        y = 'ACAGGGCQT'
 
         # f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
         f = self.create_cost_function()
-        xij, yij = self.s.local_alignment_linear_number(x, y, f)
+        # xij, yij = self.s.local_alignment_path(x, y, f)
+        res1 = self.s.local_alignment(x, y, f)
+        res2 = self.s.local_alignment(list(reversed(x)), list(reversed(y)), f)
 
-        p = list()
-        self.s.dac(xij, yij, f, p)
+        print("Alignment 1")
+        sequence.StringTool.print_matrix(res1)
+        print("Alignment 2")
+        sequence.StringTool.print_matrix(res2)
 
-        print(self.s.r1)
-        print(self.s.r2)
+        #
+        # p = list()
+        # self.s.dac(xij, yij, f, p)
+        #
+        # print(self.s.r1)
+        # print(self.s.r2)
 
     # def test_alignment_linear_with_path(self):
     #     x = 'AGGCTATCACCTGACCTCCAGGCCGATGCCCXXR'

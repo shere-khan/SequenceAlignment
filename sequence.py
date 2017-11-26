@@ -34,27 +34,44 @@ class StringTool:
             l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
             k_star = min(l)
             k_star_index = l.index(k_star)
-            path = (k_star_index, pos)
+        path = (k_star_index, pos)
 
-            p.append(path)
-            self.dac(x[:k_star_index], y[:pos], f, p)
-            self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
+        p.append(path)
+        self.dac(x[:k_star_index], y[:pos], f, p)
+        self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
 
     @staticmethod
     def local_alignment_path(x, y, f):
         b1 = StringTool.local_alignment_linear_number(x, y, f)
         b2 = StringTool.local_alignment_linear_number(list(reversed(x)), list(reversed(y)), f)
 
-        xi = b1[1][1]
-        xj = b2[1][0]
+        xi = len(x) - b2[1][0]
+        xj = b1[1][0]
 
-        yi = b1[1][1]
-        yj = b2[1][0]
+        yi = len(y) - b2[1][0]
+        yj = b1[1][1]
 
         xij = x[xi:xj]
         yij = y[yi:yj]
 
         return xij, yij
+
+    @staticmethod
+    def local_alignment(x, y, f):
+        m = len(x)
+        n = len(y)
+        M = [[0] * (n + 1) for i in range(m + 1)]
+        acc = 0
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1], 'match-mismatch')
+                b = M[i - 1][j] + f("", y[j - 1], 'indel')
+                c = M[i][j - 1] + f(x[i - 1], "", 'indel')
+                maxi = max(a, b, c, 0)
+                M[i][j] = maxi
+
+        print('acc: ' + str(acc))
+        return M
 
     @staticmethod
     def local_alignment_linear_number(x, y, func):
@@ -249,7 +266,7 @@ class StringTool:
     def print_matrix(M):
         for row in M:
             for x in row:
-                print(x[0], end=" ")
+                print(x, end=" ")
             print()
 
 
