@@ -278,3 +278,13 @@ class StringTool:
 
 class StringCreator:
     pass
+
+# if __name__ == '__main__':
+#     file = open('input2.txt', 'w')
+#     l = 200
+#     x = StringTool.sequence_generator(l, 'ACTG')
+#     y = StringTool.sequence_generator(l, 'ACTG')
+#     file.write(''.join(x))
+#     file.write('\n')
+#     file.write(''.join(y))
+#     file.close()
