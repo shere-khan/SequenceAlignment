@@ -136,12 +136,9 @@ class StringTool:
             cur.append(0)
             l = range(1, n + 1)
             for j in l:
-                # try:
                 a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
                 b = cur[-1] + func("", y[j - 1], 'indel')
                 c = prev[j] + func(x[i - 1], '', 'indel')
-                # except IndexError:
-                #     print(i, j)
                 v = max(a, b, c, 0)
                 cur.append(v)
 
@@ -149,14 +146,8 @@ class StringTool:
                     best = (v, (i, j))
                     break
 
-            # if len(cur) < n + 1:
-            #     print(len(cur))
-
             prev = cur
             cur = list()
-
-            # if len(prev) < n + 1:
-            #     print('yes')
 
         return best
 
@@ -280,8 +271,8 @@ class StringCreator:
     pass
 
 # if __name__ == '__main__':
-#     file = open('input4.txt', 'w')
-#     l = 5000
+#     file = open('input5.txt', 'w')
+#     l = 2000
 #     x = StringTool.sequence_generator(l, 'ACTG')
 #     y = StringTool.sequence_generator(l, 'ACTG')
 #     file.write(''.join(x))
