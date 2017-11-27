@@ -1,4 +1,5 @@
-import math, random
+import math
+import random
 
 
 class StringTool:
@@ -130,12 +131,17 @@ class StringTool:
         n = len(y)
         prev = [0 for i in range(n + 1)]
         best = (0, (0, 0))
+        cur = list()
         for i in range(1, m + 1):
-            cur = [prev[0]]
-            for j in range(1, n + 1):
-                a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
-                b = cur[-1] + func("", y[j - 1], 'indel')
-                c = prev[j] + func(x[i - 1], '', 'indel')
+            cur.append(0)
+            l = range(1, n + 1)
+            for j in l:
+                try:
+                    a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
+                    b = cur[-1] + func("", y[j - 1], 'indel')
+                    c = prev[j] + func(x[i - 1], '', 'indel')
+                except IndexError:
+                    print(i, j)
                 v = max(a, b, c, 0)
                 cur.append(v)
 
@@ -143,7 +149,14 @@ class StringTool:
                     best = (v, (i, j))
                     break
 
+            if len(cur) < n + 1:
+                print(len(cur))
+
             prev = cur
+            cur = list()
+
+            if len(prev) < n + 1:
+                print('yes')
 
         return best
 

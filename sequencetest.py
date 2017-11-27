@@ -20,24 +20,25 @@ class TestStringAlignment(unittest.TestCase):
     #     print(best)
 
     def test_local_alignment_linear_path(self):
-        # l = 500
-        # x = sequence.StringTool.sequence_generator(l, 'ACTG')
-        # y = sequence.StringTool.sequence_generator(l, 'ACTG')
-
-        x = 'AGGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQAHLFKFAOVUHAIBADALSDKLHBASDGFAVDLABVDKLABKLJDVBALKSD'
-        y = 'TAGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACXXXXRRRYZZZ'
-
-        print('x: ' + ''.join(x))
-        print('y: ' + ''.join(y))
-
         f = self.create_cost_function()
-        p = list()
-        xij, yij = self.s.local_alignment_path(x, y, f)
+        for i in range(100):
+            l = 300
+            x = sequence.StringTool.sequence_generator(l, 'ACTG')
+            y = sequence.StringTool.sequence_generator(l, 'ACTG')
 
-        self.s.dac(xij, yij, f, p)
+            # x = 'AGGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQAHLFKFAOVUHAIBADALSDKLHBASDGFAVDLABVDKLABKLJDVBALKSD'
+            # y = 'TAGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACXXXXRRRYZZZ'
 
-        print(self.s.r1)
-        print(self.s.r2)
+            print('x: ' + ''.join(x))
+            print('y: ' + ''.join(y))
+
+            p = list()
+            xij, yij = self.s.local_alignment_path(x, y, f)
+
+            self.s.dac(xij, yij, f, p)
+
+            print(self.s.r1)
+            print(self.s.r2)
 
     # def test_alignment_global_large_number(self):
     #     # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
