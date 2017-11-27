@@ -26,18 +26,6 @@ class TestStringAlignment(unittest.TestCase):
         return cost
 
     # def test_local_alignment_50(self):
-    #     x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-    #     y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
-    #     # x = 'ACAGATTA'
-    #     # y = 'TAGCTTA'
-    #
-    #     # f = lambda x, y: 1 if y == "" or x == "" or x != y else 0
-    #     f = self.create_cost_function()
-    #     best = self.s.local_alignment_linear_number(x, y, f)
-    #
-    #     print(best)
-
-    # def test_local_alignment_50(self):
     #     f = self.create_cost_function()
     #
     #     x = 'AGGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQAHLFKFAOVUHAIBADALSDKLHBASDGFAVDLABVDKLABKLJDVBALKSD'
@@ -57,26 +45,26 @@ class TestStringAlignment(unittest.TestCase):
     #     print(self.s.r1)
     #     print(self.s.r2)
 
-    def test_local_alignment_200(self):
-        f = self.create_cost_function()
-
-        file = open("input2.txt", 'r')
-        x = file.readline()
-        y = file.readline()
-
-        file.close()
-
-        print('x: ' + ''.join(x))
-        print('y: ' + ''.join(y))
-
-        p = list()
-
-        xij, yij = self.s.local_alignment_path(x, y, f)
-
-        self.s.dac(xij, yij, f, p)
-
-        print(self.s.r1)
-        print(self.s.r2)
+    # def test_local_alignment_200(self):
+    #     f = self.create_cost_function()
+    #
+    #     file = open("input2.txt", 'r')
+    #     x = file.readline()
+    #     y = file.readline()
+    #
+    #     file.close()
+    #
+    #     print('x: ' + ''.join(x))
+    #     print('y: ' + ''.join(y))
+    #
+    #     p = list()
+    #
+    #     xij, yij = self.s.local_alignment_path(x, y, f)
+    #
+    #     self.s.dac(xij, yij, f, p)
+    #
+    #     print(self.s.r1)
+    #     print(self.s.r2)
 
     # def test_local_alignment_400(self):
     #     f = self.create_cost_function()
@@ -99,18 +87,50 @@ class TestStringAlignment(unittest.TestCase):
     #     print(self.s.r1)
     #     print(self.s.r2)
 
-    # def test_alignment_global_large_number(self):
-    #     # x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-    #     # y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
-    #
-    #     l = 2000
-    #     x = sequence.StringTool.sequence_generator(l, 'ACTG')
-    #     y = sequence.StringTool.sequence_generator(l, 'ACTG')
+    # def test_alignment_global_small_sequence(self):
+    #     x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
+    #     y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
     #
     #     print('x: ' + ''.join(x))
     #     print('y: ' + ''.join(y))
     #
     #     f = self.create_cost_function()
+    #     p = list()
+    #     self.s.dac(x, y, f, p)
+    #
+    #     print(self.s.r1)
+    #     print(self.s.r2)
+
+    # def test_alignment_global_1000(self):
+    #     f = self.create_cost_function()
+    #
+    #     file = open("input3.txt", 'r')
+    #     x = file.readline()
+    #     y = file.readline()
+    #
+    #     file.close()
+    #
+    #     print('x: ' + ''.join(x))
+    #     print('y: ' + ''.join(y))
+    #
+    #     p = list()
+    #     self.s.dac(x, y, f, p)
+    #
+    #     print(self.s.r1)
+    #     print(self.s.r2)
+
+    # def test_alignment_global_5000(self):
+    #     f = self.create_cost_function()
+    #
+    #     file = open("input4.txt", 'r')
+    #     x = file.readline()
+    #     y = file.readline()
+    #
+    #     file.close()
+    #
+    #     print('x: ' + ''.join(x))
+    #     print('y: ' + ''.join(y))
+    #
     #     p = list()
     #     self.s.dac(x, y, f, p)
     #
