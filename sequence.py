@@ -134,11 +134,15 @@ class StringTool:
         cur = list()
         for i in range(1, m + 1):
             cur.append(0)
-            l = range(1, n + 1)
+            l = list(range(1, n + 1))
             for j in l:
-                a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
-                b = cur[-1] + func("", y[j - 1], 'indel')
-                c = prev[j] + func(x[i - 1], '', 'indel')
+                try:
+                    a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
+                    b = cur[-1] + func("", y[j - 1], 'indel')
+                    c = prev[j] + func(x[i - 1], '', 'indel')
+                except IndexError:
+                    print()
+
                 v = max(a, b, c, 0)
                 cur.append(v)
 
