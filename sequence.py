@@ -132,10 +132,12 @@ class StringTool:
         prev = [0 for i in range(n + 1)]
         best = (0, (0, 0))
         cur = list()
+        fin = False
         for i in range(1, m + 1):
             cur.append(0)
-            l = list(range(1, n + 1))
-            for j in l:
+            if fin:
+                break
+            for j in range(1, n + 1):
                 try:
                     a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
                     b = cur[-1] + func("", y[j - 1], 'indel')
@@ -148,6 +150,7 @@ class StringTool:
 
                 if v == bound:
                     best = (v, (i, j))
+                    fin = True
                     break
 
             prev = cur
