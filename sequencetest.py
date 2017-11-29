@@ -25,140 +25,80 @@ class TestStringAlignment(unittest.TestCase):
 
         return cost
 
-    # def test_local_alignment_50(self):
+    # def test_local_alignment_200(self):
     #     f = self.create_cost_function()
     #
-    #     x = 'AGGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQAHLFKFAOVUHAIBADALSDKLHBASDGFAVDLABVDKLABKLJDVBALKSD'
-    #     y = 'TAGCTATCACYYYYQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACXXXXRRRYZZZ'
-    #
-    #     print(len(x))
-    #     print(len(y))
+    #     l = 6
+    #     x = sequence.StringTool.sequence_generator(l, 'ACTG')
+    #     y = sequence.StringTool.sequence_generator(l, 'ACTG')
     #
     #     print('x: ' + ''.join(x))
     #     print('y: ' + ''.join(y))
     #
     #     p = list()
+    #
     #     xij, yij = self.s.local_alignment_path(x, y, f)
     #
     #     self.s.dac(xij, yij, f, p)
     #
     #     print(self.s.r1)
     #     print(self.s.r2)
-    #     print()
-    #     print()
 
-    def test_local_alignment_200(self):
+    def test_alignment_global(self):
         f = self.create_cost_function()
+        l = 6
 
-        file = open("input2.txt", 'r')
-        x = file.readline()
-        y = file.readline()
-
-        file.close()
+        x = 'TTTCTT'
+        y = 'AGTCGA'
 
         print('x: ' + ''.join(x))
         print('y: ' + ''.join(y))
 
         p = list()
 
-        xij, yij = self.s.local_alignment_path(x, y, f)
-
-        self.s.dac(xij, yij, f, p)
+        self.s.dac(x, y, f, p)
 
         print(self.s.r1)
         print(self.s.r2)
 
-    # def test_local_alignment_400(self):
+    # def test_alignment_global_horiz(self):
     #     f = self.create_cost_function()
+    #     l = 6
     #
-    #     file = open("input1.txt", 'r')
-    #     x = file.readline()
-    #     y = file.readline()
-    #
-    #     file.close()
+    #     x = 'TTTCTT'
+    #     y = 'AGTCGA'
     #
     #     print('x: ' + ''.join(x))
     #     print('y: ' + ''.join(y))
     #
     #     p = list()
     #
-    #     xij, yij = self.s.local_alignment_path(x, y, f)
-    #
-    #     self.s.dac(xij, yij, f, p)
-    #
-    #     print(self.s.r1)
-    #     print(self.s.r2)
-    #
-    # def test_local_alignment_2000(self):
-    #     f = self.create_cost_function()
-    #
-    #     x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-    #     y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
-    #
-    #     # file = open("input5.txt", 'r')
-    #     # x = file.readline()
-    #     # y = file.readline()
-    #     #
-    #     # file.close()
-    #
-    #     print('x: ' + ''.join(x))
-    #     print('y: ' + ''.join(y))
-    #
-    #     p = list()
-    #
-    #     xij, yij = self.s.local_alignment_path(x, y, f)
-    #
-    #     self.s.dac(xij, yij, f, p)
-    #
-    #     print(self.s.r1)
-    #     print(self.s.r2)
-
-    # def test_alignment_global_small_sequence(self):
-    #     x = 'AGGCTATCACYYYYQQQQXYZGACTGACCXXXXXXXXXTCCAGGCCGATGCCCXXR'
-    #     y = 'TAGCTATCACYYYYQQQQXYZGACGACCGCXXXXXXXXXXGGTCGATTTGCCCGACX'
-    #
-    #     print('x: ' + ''.join(x))
-    #     print('y: ' + ''.join(y))
-    #
-    #     f = self.create_cost_function()
-    #     p = list()
-    #     self.s.dac(x, y, f, p)
-    #
-    #     print(self.s.r1)
-    #     print(self.s.r2)
-
-    # def test_alignment_global_1000(self):
-    #     f = self.create_cost_function()
-    #
-    #     file = open("input3.txt", 'r')
-    #     x = file.readline()
-    #     y = file.readline()
-    #
-    #     file.close()
-    #
-    #     print('x: ' + ''.join(x))
-    #     print('y: ' + ''.join(y))
-    #
-    #     p = list()
-    #     self.s.dac(x, y, f, p)
+    #     self.s.dac_horiz(x, y, f, p)
     #
     #     print(self.s.r1)
     #     print(self.s.r2)
 
     # def test_alignment_global_5000(self):
     #     f = self.create_cost_function()
+    #     l = 6
     #
-    #     file = open("input4.txt", 'r')
-    #     x = file.readline()
-    #     y = file.readline()
+    #     x = 'TTTCTT'
+    #     y = 'AGTCGA'
     #
-    #     file.close()
+    #     # x = 'TTCTTT'
+    #     # y = 'AGC'
     #
     #     print('x: ' + ''.join(x))
     #     print('y: ' + ''.join(y))
     #
     #     p = list()
-    #     self.s.dac(x, y, f, p)
+    #     M = self.s.alignment_matrix(x, y, f)
+    #     self.s.print_matrix(M)
+    #
+    #     r1, r2 = self.s.unpack_alignment(M, x, y, "", "")
+    #
+    #     print(r1)
+    #     print(r2)
     #
     #     print(self.s.r1)
     #     print(self.s.r2)
