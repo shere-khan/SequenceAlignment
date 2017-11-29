@@ -41,52 +41,6 @@ class StringTool:
             self.dac(x[:k_star_index], y[:pos], f, p)
             self.dac(x[k_star_index - 1:], y[pos - 1:], f, p)
 
-    def dac_horiz(self, x, y, f, p):
-        m = len(x)
-        n = len(y)
-        if m <= 2 or n <= 2:
-            M = StringTool.alignment(x, y, f)
-            self.r1 = self.r1[:-1]
-            self.r2 = self.r2[:-1]
-            r1, r2 = StringTool.build_alignment_iter(x, y, M, "", "")
-            self.r1 += r1
-            self.r2 += r2
-        else:
-            pos = math.ceil(n / 2)
-            x1 = x[:pos]
-            x2 = x[pos:]
-            fs = StringTool.alignment_horiz(x1, y, f)
-            gs = StringTool.alignment_horiz(list(reversed(x2)), list(reversed(y)), f)
-            l = list(map(lambda x: sum(x), zip(fs, reversed(gs))))
-            k_star = max(l)
-            k_star_index = l.index(k_star)
-            path = (k_star_index, pos)
-
-            p.append(path)
-            xcut1 = x[:pos]
-            xcut2 = x[pos - 1:]
-            ycut1 = y[:k_star_index]
-            ycut2 = y[k_star_index - 1:]
-            self.dac(xcut1, ycut1, f, p)
-            self.dac(xcut2, ycut2, f, p)
-
-    @staticmethod
-    def alignment_horiz(x, y, func):
-        m = len(x)
-        n = len(y)
-        prev = [i for i in range(n + 1)]
-        for i in range(1, m + 1):
-            cur = [prev[0] + 1]
-            for j in range(1, n + 1):
-                a = prev[j - 1] + func(x[i - 1], y[j - 1], 'match-mismatch')
-                b = cur[-1] + func("", y[j - 1], 'indel')
-                c = prev[j] + func(x[i - 1], '', 'indel')
-                cur.append(max(a, b, c))
-
-            prev = cur
-
-        return prev
-
     @staticmethod
     def local_alignment_path(x, y, f):
         b1 = StringTool.local_alignment_linear_number(x, y, f)
@@ -105,23 +59,6 @@ class StringTool:
         yij = y[yi:yj + 1]
 
         return xij, yij
-
-    @staticmethod
-    def local_alignment(x, y, f):
-        m = len(x)
-        n = len(y)
-        M = [[0] * (n + 1) for i in range(m + 1)]
-        acc = 0
-        for i in range(1, m + 1):
-            for j in range(1, n + 1):
-                a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1], 'match-mismatch')
-                b = M[i - 1][j] + f("", y[j - 1], 'indel')
-                c = M[i][j - 1] + f(x[i - 1], "", 'indel')
-                maxx = max(a, b, c, 0)
-                M[i][j] = maxx
-
-        print('acc: ' + str(acc))
-        return M
 
     @staticmethod
     def local_alignment_linear_number(x, y, func):
@@ -296,92 +233,3 @@ class StringTool:
     @staticmethod
     def sequence_generator(n, letters):
         return [random.choice(letters) for i in range(n)]
-
-    @staticmethod
-    def populate_base_matrix(M, m, n, f):
-        for i in range(0, m + 1):
-            for j in range(0, n + 1):
-                if i == 0 and j == 0:
-                    M.append([(i, None)])
-                elif i == 0 and j > 0:
-                    M[i].append((j, (i, j - 1, 'left')))
-                elif i > 0 and j == 0:
-                    M.append([(i, (i - 1, j, 'up'))])
-                else:
-                    M[i].append((0, None))
-
-    @staticmethod
-    def alignment_matrix(x, y, f):
-        m = len(x)
-        n = len(y)
-        M = []
-        StringTool.populate_base_matrix(M, m, n, f)
-        for i in range(1, m + 1):
-            for j in range(1, n + 1):
-                a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1], 'match-mismatch')
-                b = M[i - 1][j][0] + f("", y[j - 1], 'indel')
-                c = M[i][j - 1][0] + f(x[i - 1], "", 'indel')
-                vals = [a, b, c]
-                maxx = max(vals)
-                M[i][j] = (maxx, StringTool.get_parent(vals.index(maxx), i, j))
-
-        return M
-
-    @staticmethod
-    def unpack_alignment(M, s1, s2, r1, r2):
-        if M is None:
-            return 'No alignment'
-        n = len(s1)
-        m = len(s2)
-        parent_info = M[n][m][1]
-        if parent_info is None:
-            return 'No alignment'
-
-        parent_i = parent_info[0]
-        parent_j = parent_info[1]
-        res = StringTool.get_string(s1, s2, parent_info[2], n, m)
-        r1 += res[0]
-        r2 += res[1]
-
-        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
-
-        return r1, r2
-
-    @staticmethod
-    def __unpack_alignment(M, i, j, s1, s2, r1, r2):
-        parent_info = M[i][j][1]
-        if parent_info is None:
-            return r1, r2
-        if parent_info[0] == parent_info[1] == 0:
-            if parent_info[2] == 'up':
-                r1 = s1[i - 1] + r1
-                r2 = "_" + r2
-
-                return r1, r2
-
-            r1 = "_" + r1
-            r2 = s2[j - 1] + r2
-
-            return r1, r2
-
-        res = StringTool.get_string(s1, s2, parent_info[2], i, j)
-        r1 = res[0] + r1
-        r2 = res[1] + r2
-
-        parent_i = parent_info[0]
-        parent_j = parent_info[1]
-        parent = M[parent_i][parent_j][1]
-
-        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
-
-        return r1, r2
-
-# if __name__ == '__main__':
-#     file = open('input5.txt', 'w')
-#     l = 2000
-#     x = StringTool.sequence_generator(l, 'ACTG')
-#     y = StringTool.sequence_generator(l, 'ACTG')
-#     file.write(''.join(x))
-#     file.write('\n')
-#     file.write(''.join(y))
-#     file.close()

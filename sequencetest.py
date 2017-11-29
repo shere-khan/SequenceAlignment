@@ -25,10 +25,26 @@ class TestStringAlignment(unittest.TestCase):
 
         return cost
 
-    def test_local_alignment_200(self):
+    # def test_local_alignment_200(self):
+    #     f = self.create_cost_function()
+    #
+    #     l = 100
+    #     x = sequence.StringTool.sequence_generator(l, 'ACTG')
+    #     y = sequence.StringTool.sequence_generator(l, 'ACTG')
+    #
+    #     print('x: ' + ''.join(x))
+    #     print('y: ' + ''.join(y))
+    #
+    #     p = list()
+    #
+    #
+    #     print(self.s.r1)
+    #     print(self.s.r2)
+
+    def test_alignment_global_5000(self):
         f = self.create_cost_function()
 
-        l = 100
+        l = 50
         x = sequence.StringTool.sequence_generator(l, 'ACTG')
         y = sequence.StringTool.sequence_generator(l, 'ACTG')
 
@@ -36,32 +52,22 @@ class TestStringAlignment(unittest.TestCase):
         print('y: ' + ''.join(y))
 
         p = list()
+        self.s.dac(x, y, f, p)
 
+        print('GLOBAL')
+        print(self.s.r1)
+        print(self.s.r2)
+
+        self.s.r1 = ''
+        self.s.r2 = ''
         xij, yij = self.s.local_alignment_path(x, y, f)
 
         self.s.dac(xij, yij, f, p)
 
+        print()
+        print('LOCAL')
         print(self.s.r1)
         print(self.s.r2)
-
-    # def test_alignment_global_5000(self):
-    #     f = self.create_cost_function()
-    #     l = 6
-    #
-    #     print('x: ' + ''.join(x))
-    #     print('y: ' + ''.join(y))
-    #
-    #     p = list()
-    #     M = self.s.alignment_matrix(x, y, f)
-    #     self.s.print_matrix(M)
-    #
-    #     r1, r2 = self.s.unpack_alignment(M, x, y, "", "")
-    #
-    #     print(r1)
-    #     print(r2)
-    #
-    #     print(self.s.r1)
-    #     print(self.s.r2)
 
 
 if __name__ == '__main__':
