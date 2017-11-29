@@ -44,49 +44,9 @@ class TestStringAlignment(unittest.TestCase):
         print(self.s.r1)
         print(self.s.r2)
 
-    # def test_alignment_global(self):
-    #     f = self.create_cost_function()
-    #     l = 6
-    #
-    #     x = 'TTTCTT'
-    #     y = 'AGTCGA'
-    #
-    #     print('x: ' + ''.join(x))
-    #     print('y: ' + ''.join(y))
-    #
-    #     p = list()
-    #
-    #     self.s.dac(x, y, f, p)
-    #
-    #     print(self.s.r1)
-    #     print(self.s.r2)
-
-    # def test_alignment_global_horiz(self):
-    #     f = self.create_cost_function()
-    #     l = 6
-    #
-    #     x = 'TTTCTT'
-    #     y = 'AGTCGA'
-    #
-    #     print('x: ' + ''.join(x))
-    #     print('y: ' + ''.join(y))
-    #
-    #     p = list()
-    #
-    #     self.s.dac_horiz(x, y, f, p)
-    #
-    #     print(self.s.r1)
-    #     print(self.s.r2)
-
     # def test_alignment_global_5000(self):
     #     f = self.create_cost_function()
     #     l = 6
-    #
-    #     x = 'TTTCTT'
-    #     y = 'AGTCGA'
-    #
-    #     # x = 'TTCTTT'
-    #     # y = 'AGC'
     #
     #     print('x: ' + ''.join(x))
     #     print('y: ' + ''.join(y))
