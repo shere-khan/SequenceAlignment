@@ -25,41 +25,41 @@ class TestStringAlignment(unittest.TestCase):
 
         return cost
 
-    # def test_local_alignment_200(self):
-    #     f = self.create_cost_function()
-    #
-    #     l = 6
-    #     x = sequence.StringTool.sequence_generator(l, 'ACTG')
-    #     y = sequence.StringTool.sequence_generator(l, 'ACTG')
-    #
-    #     print('x: ' + ''.join(x))
-    #     print('y: ' + ''.join(y))
-    #
-    #     p = list()
-    #
-    #     xij, yij = self.s.local_alignment_path(x, y, f)
-    #
-    #     self.s.dac(xij, yij, f, p)
-    #
-    #     print(self.s.r1)
-    #     print(self.s.r2)
-
-    def test_alignment_global(self):
+    def test_local_alignment_200(self):
         f = self.create_cost_function()
-        l = 6
 
-        x = 'TTTCTT'
-        y = 'AGTCGA'
+        l = 100
+        x = sequence.StringTool.sequence_generator(l, 'ACTG')
+        y = sequence.StringTool.sequence_generator(l, 'ACTG')
 
         print('x: ' + ''.join(x))
         print('y: ' + ''.join(y))
 
         p = list()
 
-        self.s.dac(x, y, f, p)
+        xij, yij = self.s.local_alignment_path(x, y, f)
+
+        self.s.dac(xij, yij, f, p)
 
         print(self.s.r1)
         print(self.s.r2)
+
+    # def test_alignment_global(self):
+    #     f = self.create_cost_function()
+    #     l = 6
+    #
+    #     x = 'TTTCTT'
+    #     y = 'AGTCGA'
+    #
+    #     print('x: ' + ''.join(x))
+    #     print('y: ' + ''.join(y))
+    #
+    #     p = list()
+    #
+    #     self.s.dac(x, y, f, p)
+    #
+    #     print(self.s.r1)
+    #     print(self.s.r2)
 
     # def test_alignment_global_horiz(self):
     #     f = self.create_cost_function()

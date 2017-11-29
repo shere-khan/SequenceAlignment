@@ -225,9 +225,11 @@ class StringTool:
                 if i == 0 and j == 0:
                     M.append([(i, None)])
                 elif i == 0 and j > 0:
-                    M[i].append((M[i][j - 1][0] + cost('', '', 'indel'), (i, j - 1, 'left')))
+                    val = M[i][j - 1][0] + cost('', '', 'indel')
+                    M[i].append((val, (i, j - 1, 'left')))
                 elif i > 0 and j == 0:
-                    M.append([(M[i - 1][0][0] + cost('', '', 'indel'), (i - 1, j, 'up'))])
+                    val2 = M[i - 1][0][0] + cost('', '', 'indel')
+                    M.append([(val2, (i - 1, j, 'up'))])
                 else:
                     M[i].append((0, None))
 
