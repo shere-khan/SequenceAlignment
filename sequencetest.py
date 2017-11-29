@@ -44,30 +44,36 @@ class TestStringAlignment(unittest.TestCase):
     def test_alignment_global_5000(self):
         f = self.create_cost_function()
 
-        l = 50
-        x = sequence.StringTool.sequence_generator(l, 'ACTG')
-        y = sequence.StringTool.sequence_generator(l, 'ACTG')
+        for i in range(10):
+            l = 100
+            x = sequence.StringTool.sequence_generator(l, 'ACTG')
+            y = sequence.StringTool.sequence_generator(l, 'ACTG')
 
-        print('x: ' + ''.join(x))
-        print('y: ' + ''.join(y))
+            # x = 'CTCGCATT'
+            # y = 'AGGCGGTA'
 
-        p = list()
-        self.s.dac(x, y, f, p)
+            print()
+            print('x: ' + ''.join(x))
+            print('y: ' + ''.join(y))
 
-        print('GLOBAL')
-        print(self.s.r1)
-        print(self.s.r2)
+            p = list()
+            # self.s.dac(x, y, f, p)
 
-        self.s.r1 = ''
-        self.s.r2 = ''
-        xij, yij = self.s.local_alignment_path(x, y, f)
+            # print('GLOBAL')
+            # print(self.s.r1)
+            # print(self.s.r2)
 
-        self.s.dac(xij, yij, f, p)
+            self.s.r1 = ''
+            self.s.r2 = ''
+            xij, yij = self.s.local_alignment_path(x, y, f)
 
-        print()
-        print('LOCAL')
-        print(self.s.r1)
-        print(self.s.r2)
+            self.s.dac(xij, yij, f, p)
+
+            print()
+            print('LOCAL')
+            print(self.s.r1)
+            print(self.s.r2)
+            print()
 
 
 if __name__ == '__main__':

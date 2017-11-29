@@ -47,16 +47,16 @@ class StringTool:
         bound = b1[0]
         yj = b1[1][1]
         xj = b1[1][0]
-        x1 = x[:xj + 1]
-        y1 = y[:yj + 1]
+        x1 = x[:xj]
+        y1 = y[:yj]
         b2 = StringTool.local_alignment_search(list(reversed(x1)), list(reversed(y1)), f, bound)
 
         xi = len(x1) - b2[1][0]
 
         yi = len(y1) - b2[1][1]
 
-        xij = x[xi:xj + 1]
-        yij = y[yi:yj + 1]
+        xij = x[xi:xj]
+        yij = y[yi:yj]
 
         return xij, yij
 
@@ -211,6 +211,22 @@ class StringTool:
             r1 = "_" + r1
             r2 = y[j - 1] + r2
         return r1, r2
+
+    @staticmethod
+    def local_alignment_matrix(x, y, f):
+        m = len(x)
+        n = len(y)
+        M = [[0 for i in range(n + 1)]]
+        for i in range(1, m + 1):
+            M.append([0])
+            for j in range(1, n + 1):
+                a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1], 'match-mismatch')
+                b = M[i - 1][j] + f("", y[j - 1], 'indel')
+                c = M[i][j - 1] + f(x[i - 1], '', 'indel')
+
+                M[i].append(max([a, b, c, 0]))
+
+        return M
 
     @staticmethod
     def get_string(s1, s2, s, i, j):
