@@ -38,13 +38,13 @@ class InputManager:
         # exp = r"[^\w\s</'](?=\w|\W)"
         exp = r"(?!<[\w])[^\w\s'](?=\w|\W)"
         match = re.findall(exp, c)
-        if match:
-            rep = match.group() + " "
-            s = re.sub(exp, rep, s)
+        # if match:
+        #     rep = match.group() + " "
+        #     s = re.sub(exp, rep, s)
 
 
     def filter1(self, s, result):
-        # exp = r'^\W'
+        exp = r'^\W'
         match = re.search(exp, s)
         while match:
             # result.append(match)
