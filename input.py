@@ -1,4 +1,4 @@
-import re
+import re, regex
 
 
 class InputManager:
@@ -16,53 +16,105 @@ class InputManager:
 
         result = list()
 
-        self.filter(c, result)
+        # self.filter(c, result)
 
         # tokenize on white space
-        # toks = c.split()
+        toks = c.split()
 
-        # run tokenization rules rules
-        # for t in toks:
-        #     t = self.filter1(t, result)
-            # t = self.filter2(t, result)
-            # t = self.filter3(t, result)
-            # t = self.filter4(t, result)
-            # t = self.filter5(t, result)
-            # t = self.filter6(t, result)
+        # run rules on each token
+        for t in toks:
+            t = self.remove_special_chars_begin_filter(t, result)
+            res = self.remove_special_chars_end_filter(t)
+            word = res.pop(-1)
+            if self.has_apostrophe_s(word):
+                t = self.remove_apostrophe_s_filter(word, result)
+            elif self.has_apostrophe_m(word):
+                t = self.remove_apostrophe_m_filter(word, result)
+            elif self.has_apostrophe_nt(word):
+                t = self.remove_apostrophe_nt_filter(word, result)
+            else:
+                result.append(word)
 
-        # f.close()
+            result.extend(res)
+
+        f.close()
 
         return result
 
-    def filter(self, c, result):
-        # exp = r"[^\w\s</'](?=\w|\W)"
-        exp = r"(?!<[\w])[^\w\s'](?=\w|\W)"
-        match = re.findall(exp, c)
-        # if match:
-        #     rep = match.group() + " "
-        #     s = re.sub(exp, rep, s)
-
-
-    def filter1(self, s, result):
+    def remove_special_chars_begin_filter(self, s, result):
         exp = r'^\W'
         match = re.search(exp, s)
         while match:
-            # result.append(match)
-            # s = s[2:]
-            rep = match.group() + " "
-            s = re.sub(exp, rep, s)
-
-        return s
-
-    def filter2(self, s, result):
-        exp = r'\W$'
-        match = re.search(exp, s)
-        while match:
-            result.append(match)
-            s = s[:-1]
+            result.append(match.group())
+            s = s[1:]
             match = re.search(exp, s)
 
         return s
+
+    def remove_special_chars_end_filter(self, s):
+        exp = r'\W$'
+        match = re.search(exp, s)
+
+        result = list()
+        while match:
+            result.append(match.group())
+            s = s[:-1]
+            match = re.search(exp, s)
+
+        result.append(s)
+
+        return result
+
+    def remove_apostrophe_s_filter(self, s, result):
+        exp = r"'s$"
+        match = re.search(exp, s)
+
+        if match:
+            s = s[:-2]
+            result.append(s)
+            result.append(match.group())
+
+        return s
+
+    def remove_apostrophe_m_filter(self, s, result):
+        exp = r"'s$"
+        match = re.search(exp, s)
+
+        if match:
+            s = s[:-2]
+            result.append(s)
+            result.append(match.group())
+
+        return s
+
+    def remove_apostrophe_nt_filter(self, s, result):
+        exp = r"n't$"
+        match = re.search(exp, s)
+
+        if match:
+            s = s[:-3]
+            result.append(s)
+            result.append('not')
+
+        return s
+
+    def has_apostrophe_s(self, s):
+        exp = r"'s$"
+        match = re.search(exp, s)
+
+        return True if match else False
+
+    def has_apostrophe_m(self, s):
+        exp = r"'m$"
+        match = re.search(exp, s)
+
+        return True if match else False
+
+    def has_apostrophe_nt(self, s):
+        exp = r"n't$"
+        match = re.search(exp, s)
+
+        return True if match else False
 
     def filter3(self, s, result):
         exp1 = r"\w*(?=['s])"
@@ -77,7 +129,6 @@ class InputManager:
         else:
             result.append()
 
-
     def filter4(self):
         pass
 
@@ -86,6 +137,7 @@ class InputManager:
 
 
 if __name__ == '__main__':
+    # print("something")
     im = InputManager('input_6640.txt')
     result = im.tokenize()
     print(result)
