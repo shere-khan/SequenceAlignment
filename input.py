@@ -16,8 +16,6 @@ class InputManager:
 
         result = list()
 
-        # self.filter(c, result)
-
         # tokenize on white space
         toks = c.split()
 
@@ -27,11 +25,11 @@ class InputManager:
             res = self.remove_special_chars_end_filter(t)
             word = res.pop(-1)
             if self.has_apostrophe_s(word):
-                t = self.remove_apostrophe_s_filter(word, result)
+                self.remove_apostrophe_s_filter(word, result)
             elif self.has_apostrophe_m(word):
-                t = self.remove_apostrophe_m_filter(word, result)
+                self.remove_apostrophe_m_filter(word, result)
             elif self.has_apostrophe_nt(word):
-                t = self.remove_apostrophe_nt_filter(word, result)
+                self.remove_apostrophe_nt_filter(word, result)
             else:
                 result.append(word)
 
@@ -57,7 +55,7 @@ class InputManager:
 
         result = list()
         while match:
-            result.append(match.group())
+            result.insert(0, match.group())
             s = s[:-1]
             match = re.search(exp, s)
 
@@ -115,22 +113,6 @@ class InputManager:
         match = re.search(exp, s)
 
         return True if match else False
-
-    def filter3(self, s, result):
-        exp1 = r"\w*(?=['s])"
-        match1 = re.search(exp1, s)
-        if match1:
-            exp2 = r"(?<=[\S])'s"
-            match2 = re.search(exp2, s)
-            result.append(match1.group())
-            if match2:
-                result.append(match2.group())
-
-        else:
-            result.append()
-
-    def filter4(self):
-        pass
 
     def changestr(self, s):
         s = 'else'
