@@ -1,4 +1,4 @@
-import re, regex
+import re, sequence as sq
 
 
 class InputManager:
@@ -119,7 +119,34 @@ class InputManager:
 
 
 if __name__ == '__main__':
-    # print("something")
-    im = InputManager('input_6640.txt')
-    result = im.tokenize()
-    print(result)
+    source = InputManager('pepper-src.txt')
+    src = source.tokenize()
+    print(src)
+
+    target = InputManager('pepper-tgt.txt')
+    tgt = target.tokenize()
+    print(tgt)
+
+    def cost(x, y, type):
+        if type == 'indel':
+            if x == '' or y == '':
+                return -1
+        if type == 'match-mismatch':
+            if x == y:
+                return 2
+            if x != y:
+                return -1
+
+    align = sq.StringTool.alignment_matrix(src, tgt, cost)
+
+    print()
+    sq.StringTool.print_matrix(align)
+
+    r1 = ""
+    r2 = ""
+    r1, r2 = sq.StringTool.unpack_alignment(align, src, tgt, r1, r2)
+
+    # print('Edit Distance: ' + str(align[-1][-1][0]))
+    print('s1: ' + r1)
+    print('s2: ' + r2)
+    print()
