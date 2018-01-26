@@ -229,10 +229,24 @@ class StringTool:
         return M
 
     @staticmethod
+    def populate_base_matrix(M, m, n):
+        for i in range(0, m + 1):
+            for j in range(0, n + 1):
+                if i == 0 and j == 0:
+                    M.append([(i, None)])
+                elif i == 0 and j > 0:
+                    M[i].append((j, (i, j - 1, 'left')))
+                elif i > 0 and j == 0:
+                    M.append([(i, (i - 1, j, 'up'))])
+                else:
+                    M[i].append((0, None))
+
+    @staticmethod
     def alignment_matrix(x, y, f):
         m = len(x)
         n = len(y)
-        M = [[0 for i in range(n + 1)]]
+        M = list()
+        StringTool.populate_base_matrix(M, m, n)
         for i in range(1, m + 1):
             for j in range(1, n + 1):
                 a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1], 'match-mismatch')
