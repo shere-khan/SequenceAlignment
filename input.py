@@ -119,11 +119,12 @@ class InputManager:
 
 
 if __name__ == '__main__':
-    source = InputManager('pepper-src.txt')
+    source = InputManager('gene-src.txt')
     src = source.tokenize()
     print(src)
+    print()
 
-    target = InputManager('pepper-tgt.txt')
+    target = InputManager('gene-tgt.txt')
     tgt = target.tokenize()
     print(tgt)
 
@@ -151,7 +152,9 @@ if __name__ == '__main__':
     #     print()
 
     print()
-    # sq.StringTool.print_matrix(align)
+    sq.StringTool.print_matrix_pointers(align)
+    print()
+    sq.StringTool.print_matrix_nums(align)
 
     r1 = ""
     r2 = ""
