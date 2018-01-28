@@ -142,7 +142,7 @@ if __name__ == '__main__':
                 return -1
 
 
-    align = sq.StringTool.local_alignment_matrix(src, tgt, cost)
+    align, max_score = sq.StringTool.local_alignment_matrix(src, tgt, cost)
     # align2 = sq.StringTool.local_alignment_matrix_values_only(src, tgt, cost)
 
     # for l in align2:
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 
     r1 = ""
     r2 = ""
-    r1, r2 = sq.StringTool.unpack_alignment(align, src, tgt, r1, r2)
+    r1, r2 = sq.StringTool.unpack_alignment(align, src, tgt, r1, r2, max_score)
 
     print('Edit Distance: ' + str(align[-1][-1][0]))
     print('s1: ' + r1)
