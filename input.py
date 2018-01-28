@@ -127,8 +127,12 @@ if __name__ == '__main__':
     tgt = target.tokenize()
     print(tgt)
 
+
     def cost(x, y, type):
-        if type == 'indel':
+        if type == 'ins':
+            if x == '' or y == '':
+                return -1
+        if type == 'del':
             if x == '' or y == '':
                 return -1
         if type == 'match-mismatch':
@@ -137,16 +141,23 @@ if __name__ == '__main__':
             if x != y:
                 return -1
 
-    align = sq.StringTool.alignment_matrix(src, tgt, cost)
+
+    align = sq.StringTool.local_alignment_matrix(src, tgt, cost)
+    # align2 = sq.StringTool.local_alignment_matrix_values_only(src, tgt, cost)
+
+    # for l in align2:
+    #     for i in l:
+    #         print(i, end=", ")
+    #     print()
 
     print()
-    sq.StringTool.print_matrix(align)
+    # sq.StringTool.print_matrix(align)
 
     r1 = ""
     r2 = ""
     r1, r2 = sq.StringTool.unpack_alignment(align, src, tgt, r1, r2)
 
-    # print('Edit Distance: ' + str(align[-1][-1][0]))
+    print('Edit Distance: ' + str(align[-1][-1][0]))
     print('s1: ' + r1)
     print('s2: ' + r2)
     print()

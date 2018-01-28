@@ -213,22 +213,6 @@ class StringTool:
         return r1, r2
 
     @staticmethod
-    def local_alignment_matrix(x, y, f):
-        m = len(x)
-        n = len(y)
-        M = [[0 for i in range(n + 1)]]
-        for i in range(1, m + 1):
-            M.append([0])
-            for j in range(1, n + 1):
-                a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1], 'match-mismatch')
-                b = M[i - 1][j] + f("", y[j - 1], 'indel')
-                c = M[i][j - 1] + f(x[i - 1], '', 'indel')
-
-                M[i].append(max([a, b, c, 0]))
-
-        return M
-
-    @staticmethod
     def populate_base_matrix(M, m, n):
         for i in range(0, m + 1):
             for j in range(0, n + 1):
@@ -242,19 +226,51 @@ class StringTool:
                     M[i].append((0, None))
 
     @staticmethod
-    def alignment_matrix(x, y, f):
+    def populate_base_local_matrix(M, m, n):
+        for i in range(0, m + 1):
+            for j in range(0, n + 1):
+                if i == 0 and j == 0:
+                    M.append([(i, None)])
+                elif i == 0 and j > 0:
+                    M[i].append((0, (i, j - 1, 'left')))
+                elif i > 0 and j == 0:
+                    M.append([(0, (i - 1, j, 'up'))])
+                else:
+                    M[i].append((0, None))
+
+    @staticmethod
+    def local_alignment_matrix(x, y, cost):
         m = len(x)
         n = len(y)
         M = list()
-        StringTool.populate_base_matrix(M, m, n)
+        StringTool.populate_base_local_matrix(M, m, n)
         for i in range(1, m + 1):
             for j in range(1, n + 1):
-                a = M[i - 1][j - 1][0] + f(x[i - 1], y[j - 1], 'match-mismatch')
-                b = M[i - 1][j][0] + f("", y[j - 1], 'indel')
-                c = M[i][j - 1][0] + f(x[i - 1], "", 'indel')
+                a = M[i - 1][j - 1][0] + cost(x[i - 1], y[j - 1], 'match-mismatch')
+                b = M[i - 1][j][0] + cost("", y[j - 1], 'ins')
+                c = M[i][j - 1][0] + cost(x[i - 1], "", 'del')
                 vals = [a, b, c, 0]
-                mynn = min(vals)
-                M[i][j] = (mynn, StringTool.get_parent(vals.index(mynn), i, j))
+                maxx = max(vals)
+                if maxx != 0:
+                    print("", end="")
+                path = StringTool.get_parent(vals.index(maxx), i, j)
+                M[i][j] = (maxx, path)
+
+        return M
+
+    @staticmethod
+    def local_alignment_matrix_values_only(x, y, f):
+        m = len(x)
+        n = len(y)
+        M = [[0 for i in range(n + 1)]]
+        for i in range(1, m + 1):
+            M.append([0])
+            for j in range(1, n + 1):
+                a = M[i - 1][j - 1] + f(x[i - 1], y[j - 1], 'match-mismatch')
+                b = M[i - 1][j] + f("", y[j - 1], 'ins')
+                c = M[i][j - 1] + f(x[i - 1], '', 'del')
+
+                M[i].append(max([a, b, c, 0]))
 
         return M
 
@@ -296,8 +312,9 @@ class StringTool:
             return r1, r2
 
         res = StringTool.get_string(s1, s2, parent_info[2], i, j)
-        r1 = res[0] + r1
-        r2 = res[1] + r2
+        x, y = StringTool.format_string(res[0], res[1])
+        r1 = x + " " + r1
+        r2 = y + " " + r2
 
         parent_i = parent_info[0]
         parent_j = parent_info[1]
@@ -306,6 +323,14 @@ class StringTool:
         r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2)
 
         return r1, r2
+
+    @staticmethod
+    def format_string(x, y):
+        max_len = max(len(x), len(y))
+        x = x.center(max_len + 2)
+        y = y.center(max_len + 2)
+
+        return x, y
 
     @staticmethod
     def get_string(s1, s2, s, i, j):
