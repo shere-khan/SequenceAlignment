@@ -285,7 +285,7 @@ class StringTool:
         return M
 
     @staticmethod
-    def unpack_alignment(M, starti, startj, s1, s2, r1, r2, max_score):
+    def unpack_alignment(M, starti, startj, s1, s2, r1, r2, r3, max_score):
         if M is None:
             return 'No alignment'
 
@@ -293,69 +293,78 @@ class StringTool:
         if parent_info is None:
             return 'No alignment'
 
-        res = StringTool.get_string(s1, s2, parent_info[2], starti, startj)
+        res = StringTool.get_string_and_edit_action(s1, s2, parent_info[2], starti, startj)
         r1 += res[0]
         r2 += res[1]
+        r3 += res[2]
 
         parent_i = parent_info[0]
         parent_j = parent_info[1]
 
-        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2, max_score)
+        r1, r2, r3 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2, r3, max_score)
 
-        return r1, r2
+        return r1, r2, r3
 
     @staticmethod
-    def __unpack_alignment(M, i, j, str1, str2, res1, res2, max_score):
+    def __unpack_alignment(M, i, j, str1, str2, res1, res2, res3, max_score):
         current_cell = M[i][j]
         parent_info = current_cell[1]
         if parent_info is None:
-            return res1, res2
+            return res1, res2, res3
         # if we are at the end of the matrix, terminate recursion
         if parent_info[0] == parent_info[1] == 0:
             if parent_info[2] == 'up':
                 res1 = str1[i - 1] + res1
                 res2 = "_" + res2
+                res3 = 'd'
 
                 return res1, res2
 
             res1 = "_" + res1
             res2 = str2[j - 1] + res2
 
-            return res1, res2
+            return res1, res2, res3
 
         # Check to see if we are at the end of the current local alignment
         score = current_cell[0]
         if score > 0:
             # get the string corresponding to the current cell's indices
-            res = StringTool.get_string(str1, str2, parent_info[2], i, j)
-            x, y = StringTool.format_string(res[0], res[1])
+            res = StringTool.get_string_and_edit_action(str1, str2, parent_info[2], i, j)
+            x, y, e = StringTool.format_string(res[0], res[1], res[2])
             res1 = x + " " + res1
             res2 = y + " " + res2
+            res3 = e + " " + res3
 
             parent_i = parent_info[0]
             parent_j = parent_info[1]
             parent = M[parent_i][parent_j][1]
 
-            res1, res2 = StringTool.__unpack_alignment(M, parent_i, parent_j, str1, str2, res1, res2, max_score)
+            res1, res2, res3 = StringTool.__unpack_alignment(M, parent_i, parent_j, str1, str2, res1, res2, res3,
+                                                             max_score)
 
-        return res1, res2
+        return res1, res2, res3
 
     @staticmethod
-    def format_string(x, y):
+    def format_string(x, y, e):
         max_len = max(len(x), len(y))
         x = x.center(max_len + 2)
         y = y.center(max_len + 2)
+        e = e.center(max_len + 2)
 
-        return x, y
+        return x, y, e
 
     @staticmethod
-    def get_string(s1, s2, s, i, j):
+    def get_string_and_edit_action(s1, s2, s, i, j):
         if s == 'diag':
-            return s1[i - 1], s2[j - 1]
+            x = s1[i - 1]
+            y = s2[j - 1]
+            if x == y:
+                return x, y, ''
+            return x, y, 's'
         if s == 'up':
-            return s1[i - 1], "_"
+            return s1[i - 1], "_", 'd'
         if s == 'left':
-            return "_", s2[j - 1]
+            return "_", s2[j - 1], 'i'
 
     @staticmethod
     def print_matrix(M):

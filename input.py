@@ -271,13 +271,14 @@ if __name__ == '__main__':
         print('\nMaximal-similarity alignments:', end='\n\n')
 
         for i, l in enumerate(locs):
-            r1 = ""
-            r2 = ""
-            r1, r2 = sq.StringTool.unpack_alignment(M, l[0], l[1], src_normalized, tgt_normalized, r1, r2,
+            r1 = ''
+            r2 = ''
+            r3 = ''
+            r1, r2, r3 = sq.StringTool.unpack_alignment(M, l[0], l[1], src_normalized, tgt_normalized, r1, r2, r3,
                                                     max_score)
 
             print('\tAlignment {0} (length {1}):'.format(i, len(r1.split())))
             print('\t\tSource at: ' + r1)
             print('\t\tTarget at: ' + r2)
-            print('\t\tEdit action:')
+            print('\t\tEdit action:' + r3)
             print()
