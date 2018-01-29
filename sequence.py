@@ -266,14 +266,9 @@ class StringTool:
         StringTool.populate_base_local_matrix(M, m, n)
         for i in range(1, m + 1):
             for j in range(1, n + 1):
-                aa = M[i - 1][j - 1]
-                bb = M[i - 1][j]
-                cc = M[i][j - 1]
-                yjm1 = y[j - 1]
-                xim1 = x[i - 1]
-                a = aa[0] + cost(x[i - 1], y[j - 1], 'match-mismatch')
-                b = bb[0] + cost("", y[j - 1], 'ins')
-                c = cc[0] + cost(x[i - 1], "", 'del')
+                a = M[i - 1][j - 1][0] + cost(x[i - 1], y[j - 1], 'match-mismatch')
+                b = M[i - 1][j][0] + cost("", y[j - 1], 'ins')
+                c = M[i][j - 1][0] + cost(x[i - 1], "", 'del')
                 vals = [a, b, c, 0]
                 maxx = max(vals)
                 if maxx > max_score:
@@ -281,7 +276,10 @@ class StringTool:
                 if maxx != 0:
                     print("", end="")
                 argmax = vals.index(maxx)
-                path = StringTool.get_parent(argmax, i, j)
+                if argmax < 3:
+                    path = StringTool.get_parent(argmax, i, j)
+                else:
+                    path = (None, None, " ")
                 M[i][j] = (maxx, path)
 
         return M, max_score
@@ -321,33 +319,27 @@ class StringTool:
         return M
 
     @staticmethod
-    def unpack_alignment(M, s1, s2, r1, r2, max_score):
+    def unpack_alignment(M, starti, startj, s1, s2, r1, r2, max_score):
         if M is None:
             return 'No alignment'
-        n = len(s1)
-        m = len(s2)
-        parent_info = M[n][m][1]
+
+        parent_info = M[starti][startj][1]
         if parent_info is None:
             return 'No alignment'
 
-        state = 'skip'
-        score = M[n][m][0]
-        if score == max_score:
-            state = 'align'
-        if state == 'align':
-            res = StringTool.get_string(s1, s2, parent_info[2], n, m)
-            r1 += res[0]
-            r2 += res[1]
+        res = StringTool.get_string(s1, s2, parent_info[2], starti, startj)
+        r1 += res[0]
+        r2 += res[1]
 
         parent_i = parent_info[0]
         parent_j = parent_info[1]
 
-        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2, max_score, state)
+        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2, max_score)
 
         return r1, r2
 
     @staticmethod
-    def __unpack_alignment(M, i, j, s1, s2, r1, r2, max_score, state):
+    def __unpack_alignment(M, i, j, s1, s2, r1, r2, max_score):
         parent_info = M[i][j][1]
         if parent_info is None:
             return r1, r2
@@ -365,21 +357,17 @@ class StringTool:
             return r1, r2
 
         score = M[i][j][0]
-        if score == max_score:
-            state = 'align'
-        if score == 0:
-            state = 'skip'
-        if state == 'align':
+        if score > 0:
             res = StringTool.get_string(s1, s2, parent_info[2], i, j)
             x, y = StringTool.format_string(res[0], res[1])
             r1 = x + " " + r1
             r2 = y + " " + r2
 
-        parent_i = parent_info[0]
-        parent_j = parent_info[1]
-        parent = M[parent_i][parent_j][1]
+            parent_i = parent_info[0]
+            parent_j = parent_info[1]
+            parent = M[parent_i][parent_j][1]
 
-        r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2, max_score, state)
+            r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2, max_score)
 
         return r1, r2
 
@@ -423,7 +411,7 @@ class StringTool:
     def print_matrix_nums(M):
         for row in M:
             for x in row:
-                print(x[0], end=' ')
+                x[0]
             print()
 
     @staticmethod

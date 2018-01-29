@@ -1,4 +1,4 @@
-import re, sequence as sq
+import re, sequence as sq, search
 
 
 class InputManager:
@@ -119,11 +119,13 @@ class InputManager:
 
 
 if __name__ == '__main__':
+    # source = InputManager('pepper-src.txt')
     source = InputManager('gene-src.txt')
     src = source.tokenize()
     print(src)
     print()
 
+    # target = InputManager('pepper-tgt.txt')
     target = InputManager('gene-tgt.txt')
     tgt = target.tokenize()
     print(tgt)
@@ -144,6 +146,9 @@ if __name__ == '__main__':
 
 
     align, max_score = sq.StringTool.local_alignment_matrix(src, tgt, cost)
+
+    locs = search.Search.search_matrix(align, max_score)
+
     # align2 = sq.StringTool.local_alignment_matrix_values_only(src, tgt, cost)
 
     # for l in align2:
@@ -156,11 +161,12 @@ if __name__ == '__main__':
     print()
     sq.StringTool.print_matrix_nums(align)
 
-    r1 = ""
-    r2 = ""
-    r1, r2 = sq.StringTool.unpack_alignment(align, src, tgt, r1, r2, max_score)
+    for i in locs:
+        r1 = ""
+        r2 = ""
+        r1, r2 = sq.StringTool.unpack_alignment(align, i[0], i[1], src, tgt, r1, r2, max_score)
 
-    print('Edit Distance: ' + str(align[-1][-1][0]))
-    print('s1: ' + r1)
-    print('s2: ' + r2)
-    print()
+        print('Edit Distance: ' + str(align[-1][-1][0]))
+        print('s1: ' + r1)
+        print('s2: ' + r2)
+        print()
