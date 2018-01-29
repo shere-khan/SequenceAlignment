@@ -1,4 +1,4 @@
-import re, sequence as sq, search
+import re, sequence as sq, search, sys
 
 
 class InputManager:
@@ -124,6 +124,85 @@ class InputManager:
 
         return c
 
+    @staticmethod
+    def cost(x, y, type):
+        if type == 'ins':
+            if x == '' or y == '':
+                return -1
+        if type == 'del':
+            if x == '' or y == '':
+                return -1
+        if type == 'match-mismatch':
+            if x == y:
+                return 2
+            if x != y:
+                return -1
+
+    @staticmethod
+    def print_matrix_info(toks):
+        print('          ', end='')
+        for i in range(len(toks) + 1):
+            print(str(i).center(5), end='')
+
+        print()
+        print('          ', end='')
+
+        for i in range(len(toks) + 1):
+            sub = toks[i - 1][:3]
+            if i == 0:
+                print('#'.center(5), end='')
+            else:
+                print(sub.center(5), end='')
+            sys.stdout.flush()
+
+    @staticmethod
+    def print_matrix_format(M, src_toks, tgt_toks):
+        InputManager.print_matrix_info(tgt_toks)
+        print()
+
+        for i, row in enumerate(M):
+            print(str(i).center(5), end='')
+            if i == 0:
+                print('#'.center(5), end='')
+            else:
+                print(src_toks[i - 1][:3].center(5), end='')
+            sys.stdout.flush()
+            for j, cell in enumerate(row):
+                print(str(cell[0]).center(5), end='')
+                sys.stdout.flush()
+            print()
+
+    @staticmethod
+    def print_backtrace_format(M, src_toks, tgt_toks):
+        InputManager.print_matrix_info(tgt_toks)
+        print()
+
+        for i, row in enumerate(M):
+            print(str(i).center(5), end='')
+            if i == 0:
+                print('#'.center(5), end='')
+            else:
+                print(src_toks[i - 1][:3].center(5), end='')
+            sys.stdout.flush()
+            for j, cell in enumerate(row):
+                if cell[1] is None:
+                    print(' '.center(5), end='')
+
+                else:
+                    ptr = cell[1][2]
+                    val = ''
+                    if ptr == 'up':
+                        val = 'UP'
+                    elif ptr == 'left':
+                        val = 'LT'
+                    elif ptr == 'diag':
+                        val = 'DI'
+
+                    print(str(val).center(5), end='')
+
+                sys.stdout.flush()
+            print()
+
 
 if __name__ == '__main__':
     print('University of Central Florida')
@@ -131,7 +210,9 @@ if __name__ == '__main__':
     print()
     print('Text Similarity Analysis by Justin Barry')
 
-    file_name_prefs = ['pepper', 'gene', 'shake']
+    file_name_prefs = ['pepper']
+    # file_name_prefs = ['pepper', 'gene', 'shake']
+    # file_name_prefs = ['pepper', 'gene', 'shake']
 
     for fn in file_name_prefs:
         src_name = '{0}-src.txt'.format(fn)
@@ -142,56 +223,53 @@ if __name__ == '__main__':
         print('Raw Tokens')
 
         source = InputManager(src_name)
-
-        rt = source.raw_tokens()
-        print('Source > {0}'.format(rt))
-
-        # source = InputManager('gene-src.txt')
-        src = source.tokenize()
-        print('Target > {0}'.format(" ".join(src)))
-
         target = InputManager(tgt_name)
-        # target = InputManager('gene-tgt.txt')
-        tgt = target.tokenize()
-        print(tgt)
 
+        # print raw tokens
+        src_raw_tokens = source.raw_tokens()
+        print('\tSource > {0}'.format(src_raw_tokens), end='')
+        tgt_raw_tokens = target.raw_tokens()
+        print('\tTarget > {0}'.format(tgt_raw_tokens), end='\n\n')
 
-        def cost(x, y, type):
-            if type == 'ins':
-                if x == '' or y == '':
-                    return -1
-            if type == 'del':
-                if x == '' or y == '':
-                    return -1
-            if type == 'match-mismatch':
-                if x == y:
-                    return 2
-                if x != y:
-                    return -1
+        # print tokens with rules applied
+        print('Normalized Tokens:')
+        src_normalized = source.tokenize()
+        print('\tSource > {0}'.format(" ".join(src_normalized)))
+        tgt_normalized = target.tokenize()
+        print('\tTarget > {0}'.format(" ".join(tgt_normalized)), end='\n\n')
 
+        # Get alignment
+        M, max_score = sq.StringTool.local_alignment_matrix(src_normalized, tgt_normalized, InputManager.cost)
 
-        align, max_score = sq.StringTool.local_alignment_matrix(src, tgt, cost)
-
-        locs = search.Search.search_matrix(align, max_score)
-
-        # align2 = sq.StringTool.local_alignment_matrix_values_only(src, tgt, cost)
-
-        # for l in align2:
-        #     for i in l:
-        #         print(i, end=", ")
-        #     print()
-
+        # print formatted edit distance table showing numbers
+        print('Edit Distance Table:')
+        InputManager.print_matrix_format(M, src_normalized, tgt_normalized)
         print()
-        sq.StringTool.print_matrix_pointers(align)
-        print()
-        sq.StringTool.print_matrix_nums(align)
 
-        for i in locs:
+        # print formatted edit distance table showing numbers
+        print('Backtrace Table:')
+        InputManager.print_backtrace_format(M, src_normalized, tgt_normalized)
+        print()
+
+        # -------------------------------- Print Alignment Report ------------------------------------------
+        print('Maximum value in distance table: {0}'.format(max_score), end='\n\n')
+
+        # find max alignment locations in alignment matrix
+        locs = search.Search.search_matrix(M, max_score)
+        print('Maxima:')
+        for loc in locs:
+            print('\t[ {0}, {1} ]'.format(loc[0], loc[1]))
+
+        print('\nMaximal-similarity alignments:', end='\n\n')
+
+        for i, l in enumerate(locs):
             r1 = ""
             r2 = ""
-            r1, r2 = sq.StringTool.unpack_alignment(align, i[0], i[1], src, tgt, r1, r2, max_score)
+            r1, r2 = sq.StringTool.unpack_alignment(M, l[0], l[1], src_normalized, tgt_normalized, r1, r2,
+                                                    max_score)
 
-            print('Edit Distance: ' + str(align[-1][-1][0]))
-            print('s1: ' + r1)
-            print('s2: ' + r2)
+            print('\tAlignment {0} (length {1}):'.format(i, len(r1.split())))
+            print('\t\tSource at' + r1)
+            print('\t\tTarget at: ' + r2)
+            print('\t\tEdit action:')
             print()
