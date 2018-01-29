@@ -229,34 +229,6 @@ class StringTool:
                 else:
                     M[i].append((0, None))
 
-    # @staticmethod
-    # def local_alignment_matrix(x, y, cost):
-    #     m = len(x)
-    #     n = len(y)
-    #     M = list()
-    #     max_score = 0
-    #     StringTool.populate_base_local_matrix(M, m, n)
-    #     for i in range(1, m + 1):
-    #         for j in range(1, n + 1):
-    #             aa = M[i - 1][j][0]
-    #             bb = M[i][j - 1][0]
-    #             cc = M[i - 1][j - 1][0]
-    #             yjm1 = y[j - 1]
-    #             xim1 = x[i - 1]
-    #             a = aa + cost("", yjm1, 'ins')
-    #             b = bb + cost(xim1, "", 'del')
-    #             c = cc + cost(xim1, yjm1, 'match-mismatch')
-    #             vals = [a, b, c, 0]
-    #             maxx = max(vals)
-    #             if maxx > max_score:
-    #                 max_score = maxx
-    #             if maxx != 0:
-    #                 print("", end="")
-    #             path = StringTool.get_parent(vals.index(maxx), i, j)
-    #             M[i][j] = (maxx, path)
-    #
-    #     return M, max_score
-
     @staticmethod
     def local_alignment_matrix(x, y, cost):
         m = len(x)
@@ -283,15 +255,6 @@ class StringTool:
                 M[i][j] = (maxx, path)
 
         return M, max_score
-
-    # @staticmethod
-    # def get_parent(val, i, j):
-    #     if val == 0:
-    #         return i, j - 1, 'left'
-    #     if val == 1:
-    #         return i - 1, j, 'up'
-    #     if val == 2:
-    #         return i - 1, j - 1, 'diag'
 
     @staticmethod
     def get_parent(val, i, j):

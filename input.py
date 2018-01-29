@@ -12,7 +12,7 @@ class InputManager:
         c = f.read()
 
         # make all strings lowercase
-        c.lower()
+        c = c.lower()
 
         result = list()
 
@@ -40,7 +40,8 @@ class InputManager:
         return result
 
     def remove_special_chars_begin_filter(self, s, result):
-        exp = r'^\W'
+        # exp = r'^\W'
+        exp = r'^\W(?=[\W]*[\w])'
         match = re.search(exp, s)
         while match:
             result.append(match.group())
@@ -50,7 +51,8 @@ class InputManager:
         return s
 
     def remove_special_chars_end_filter(self, s):
-        exp = r'\W$'
+        # exp = r'\W$'
+        exp = r'(?<=[\w])[\W]+$'
         match = re.search(exp, s)
 
         result = list()
@@ -210,9 +212,10 @@ if __name__ == '__main__':
     print()
     print('Text Similarity Analysis by Justin Barry')
 
-    file_name_prefs = ['pepper']
+    file_name_prefs = ['shake']
     # file_name_prefs = ['pepper', 'gene', 'shake']
-    # file_name_prefs = ['pepper', 'gene', 'shake']
+    # file_name_prefs = ['pepper']
+    # file_name_prefs = ['input_6640']
 
     for fn in file_name_prefs:
         src_name = '{0}-src.txt'.format(fn)
@@ -231,7 +234,7 @@ if __name__ == '__main__':
         tgt_raw_tokens = target.raw_tokens()
         print('\tTarget > {0}'.format(tgt_raw_tokens), end='\n\n')
 
-        # print tokens with rules applied
+        # Print normalized tokens with rules applied
         print('Normalized Tokens:')
         src_normalized = source.tokenize()
         print('\tSource > {0}'.format(" ".join(src_normalized)))
@@ -269,7 +272,7 @@ if __name__ == '__main__':
                                                     max_score)
 
             print('\tAlignment {0} (length {1}):'.format(i, len(r1.split())))
-            print('\t\tSource at' + r1)
+            print('\t\tSource at: ' + r1)
             print('\t\tTarget at: ' + r2)
             print('\t\tEdit action:')
             print()
