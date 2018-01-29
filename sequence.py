@@ -339,37 +339,40 @@ class StringTool:
         return r1, r2
 
     @staticmethod
-    def __unpack_alignment(M, i, j, s1, s2, r1, r2, max_score):
-        parent_info = M[i][j][1]
+    def __unpack_alignment(M, i, j, str1, str2, res1, res2, max_score):
+        current_cell = M[i][j]
+        parent_info = current_cell[1]
         if parent_info is None:
-            return r1, r2
+            return res1, res2
         # if we are at the end of the matrix, terminate recursion
         if parent_info[0] == parent_info[1] == 0:
             if parent_info[2] == 'up':
-                r1 = s1[i - 1] + r1
-                r2 = "_" + r2
+                res1 = str1[i - 1] + res1
+                res2 = "_" + res2
 
-                return r1, r2
+                return res1, res2
 
-            r1 = "_" + r1
-            r2 = s2[j - 1] + r2
+            res1 = "_" + res1
+            res2 = str2[j - 1] + res2
 
-            return r1, r2
+            return res1, res2
 
-        score = M[i][j][0]
+        # Check to see if we are at the end of the current local alignment
+        score = current_cell[0]
         if score > 0:
-            res = StringTool.get_string(s1, s2, parent_info[2], i, j)
+            # get the string corresponding to the current cell's indices
+            res = StringTool.get_string(str1, str2, parent_info[2], i, j)
             x, y = StringTool.format_string(res[0], res[1])
-            r1 = x + " " + r1
-            r2 = y + " " + r2
+            res1 = x + " " + res1
+            res2 = y + " " + res2
 
             parent_i = parent_info[0]
             parent_j = parent_info[1]
             parent = M[parent_i][parent_j][1]
 
-            r1, r2 = StringTool.__unpack_alignment(M, parent_i, parent_j, s1, s2, r1, r2, max_score)
+            res1, res2 = StringTool.__unpack_alignment(M, parent_i, parent_j, str1, str2, res1, res2, max_score)
 
-        return r1, r2
+        return res1, res2
 
     @staticmethod
     def format_string(x, y):
@@ -384,10 +387,8 @@ class StringTool:
         if s == 'diag':
             return s1[i - 1], s2[j - 1]
         if s == 'up':
-            # return s1[i - 1], s2[j]
             return s1[i - 1], "_"
         if s == 'left':
-            # return s1[i], s2[j - 1]
             return "_", s2[j - 1]
 
     @staticmethod

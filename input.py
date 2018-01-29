@@ -117,56 +117,81 @@ class InputManager:
     def changestr(self, s):
         s = 'else'
 
+    def raw_tokens(self):
+        f = open(self.file, 'r')
+        c = f.read()
+        f.close()
+
+        return c
+
 
 if __name__ == '__main__':
-    # source = InputManager('pepper-src.txt')
-    source = InputManager('gene-src.txt')
-    src = source.tokenize()
-    print(src)
+    print('University of Central Florida')
+    print('CAP6640 String 2018 - Dr. Glinos')
     print()
+    print('Text Similarity Analysis by Justin Barry')
 
-    # target = InputManager('pepper-tgt.txt')
-    target = InputManager('gene-tgt.txt')
-    tgt = target.tokenize()
-    print(tgt)
+    file_name_prefs = ['pepper', 'gene', 'shake']
+
+    for fn in file_name_prefs:
+        src_name = '{0}-src.txt'.format(fn)
+        tgt_name = '{0}-tgt.txt'.format(fn)
+
+        print('Source File: {0}'.format(src_name))
+        print('Target File: {0}'.format(tgt_name), end='\n\n')
+        print('Raw Tokens')
+
+        source = InputManager(src_name)
+
+        rt = source.raw_tokens()
+        print('Source > {0}'.format(rt))
+
+        # source = InputManager('gene-src.txt')
+        src = source.tokenize()
+        print('Target > {0}'.format(" ".join(src)))
+
+        target = InputManager(tgt_name)
+        # target = InputManager('gene-tgt.txt')
+        tgt = target.tokenize()
+        print(tgt)
 
 
-    def cost(x, y, type):
-        if type == 'ins':
-            if x == '' or y == '':
-                return -1
-        if type == 'del':
-            if x == '' or y == '':
-                return -1
-        if type == 'match-mismatch':
-            if x == y:
-                return 2
-            if x != y:
-                return -1
+        def cost(x, y, type):
+            if type == 'ins':
+                if x == '' or y == '':
+                    return -1
+            if type == 'del':
+                if x == '' or y == '':
+                    return -1
+            if type == 'match-mismatch':
+                if x == y:
+                    return 2
+                if x != y:
+                    return -1
 
 
-    align, max_score = sq.StringTool.local_alignment_matrix(src, tgt, cost)
+        align, max_score = sq.StringTool.local_alignment_matrix(src, tgt, cost)
 
-    locs = search.Search.search_matrix(align, max_score)
+        locs = search.Search.search_matrix(align, max_score)
 
-    # align2 = sq.StringTool.local_alignment_matrix_values_only(src, tgt, cost)
+        # align2 = sq.StringTool.local_alignment_matrix_values_only(src, tgt, cost)
 
-    # for l in align2:
-    #     for i in l:
-    #         print(i, end=", ")
-    #     print()
+        # for l in align2:
+        #     for i in l:
+        #         print(i, end=", ")
+        #     print()
 
-    print()
-    sq.StringTool.print_matrix_pointers(align)
-    print()
-    sq.StringTool.print_matrix_nums(align)
-
-    for i in locs:
-        r1 = ""
-        r2 = ""
-        r1, r2 = sq.StringTool.unpack_alignment(align, i[0], i[1], src, tgt, r1, r2, max_score)
-
-        print('Edit Distance: ' + str(align[-1][-1][0]))
-        print('s1: ' + r1)
-        print('s2: ' + r2)
         print()
+        sq.StringTool.print_matrix_pointers(align)
+        print()
+        sq.StringTool.print_matrix_nums(align)
+
+        for i in locs:
+            r1 = ""
+            r2 = ""
+            r1, r2 = sq.StringTool.unpack_alignment(align, i[0], i[1], src, tgt, r1, r2, max_score)
+
+            print('Edit Distance: ' + str(align[-1][-1][0]))
+            print('s1: ' + r1)
+            print('s2: ' + r2)
+            print()
