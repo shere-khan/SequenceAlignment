@@ -176,9 +176,12 @@ class InputManager:
 
     @staticmethod
     def print_backtrace_format(M, src_toks, tgt_toks):
+        # print column headers first
         InputManager.print_matrix_info(tgt_toks)
         print()
 
+        # print remaining table starting with row headers at
+        # the beginning of each row
         for i, row in enumerate(M):
             print(str(i).center(5), end='')
             if i == 0:
@@ -187,7 +190,9 @@ class InputManager:
                 print(src_toks[i - 1][:3].center(5), end='')
             sys.stdout.flush()
             for j, cell in enumerate(row):
-                if cell[1] is None:
+                # Don't print ptr's for margins/base cases
+                # or if ptr doesn't exist (None)
+                if cell[1] is None or i == 0 or j == 0:
                     print(' '.center(5), end='')
 
                 else:
