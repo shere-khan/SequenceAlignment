@@ -243,15 +243,18 @@ class StringTool:
                 c = M[i][j - 1][0] + cost(x[i - 1], "", 'del')
                 vals = [a, b, c, 0]
                 maxx = max(vals)
+
+                # Set new max score
                 if maxx > max_score:
                     max_score = maxx
-                if maxx != 0:
-                    print("", end="")
+
                 argmax = vals.index(maxx)
-                if argmax < 3:
+
+                if argmax < 3 and maxx != 0:
                     path = StringTool.get_parent(argmax, i, j)
                 else:
                     path = (None, None, " ")
+
                 M[i][j] = (maxx, path)
 
         return M, max_score
