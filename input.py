@@ -1,5 +1,14 @@
 import re, sequence as sq, search, sys
 
+"""
+Author - Justin Barry
+
+Command line args:
+{1} Absolute link to source file
+{2} Absolute link to target file
+
+"""
+
 
 class InputManager:
 
