@@ -217,68 +217,62 @@ if __name__ == '__main__':
     print()
     print('Text Similarity Analysis by Justin Barry')
 
-    file_name_prefs = ['shake']
-    # file_name_prefs = ['pepper', 'gene', 'shake']
-    # file_name_prefs = ['pepper']
-    # file_name_prefs = ['input_6640']
+    src_name = sys.argv[1]
+    tgt_name = sys.argv[2]
 
-    for fn in file_name_prefs:
-        src_name = '{0}-src.txt'.format(fn)
-        tgt_name = '{0}-tgt.txt'.format(fn)
+    print('Source File: {0}'.format(src_name.split('/')[-1]))
+    print('Target File: {0}'.format(tgt_name.split('/')[-1]), end='\n\n')
+    print('Raw Tokens')
 
-        print('Source File: {0}'.format(src_name))
-        print('Target File: {0}'.format(tgt_name), end='\n\n')
-        print('Raw Tokens')
+    source = InputManager(src_name)
+    target = InputManager(tgt_name)
 
-        source = InputManager(src_name)
-        target = InputManager(tgt_name)
+    # print raw tokens
+    src_raw_tokens = source.raw_tokens()
+    print('\tSource > {0}'.format(src_raw_tokens), end='\n')
+    tgt_raw_tokens = target.raw_tokens()
+    print('\tTarget > {0}'.format(tgt_raw_tokens), end='\n\n')
 
-        # print raw tokens
-        src_raw_tokens = source.raw_tokens()
-        print('\tSource > {0}'.format(src_raw_tokens), end='')
-        tgt_raw_tokens = target.raw_tokens()
-        print('\tTarget > {0}'.format(tgt_raw_tokens), end='\n\n')
+    # Print normalized tokens with rules applied
+    print('Normalized Tokens:')
+    src_normalized = source.tokenize()
+    print('\tSource > {0}'.format(" ".join(src_normalized)))
+    tgt_normalized = target.tokenize()
+    print('\tTarget > {0}'.format(" ".join(tgt_normalized)), end='\n\n')
 
-        # Print normalized tokens with rules applied
-        print('Normalized Tokens:')
-        src_normalized = source.tokenize()
-        print('\tSource > {0}'.format(" ".join(src_normalized)))
-        tgt_normalized = target.tokenize()
-        print('\tTarget > {0}'.format(" ".join(tgt_normalized)), end='\n\n')
+    # Get alignment
+    M, max_score = sq.StringTool.local_alignment_matrix(src_normalized, tgt_normalized, InputManager.cost)
 
-        # Get alignment
-        M, max_score = sq.StringTool.local_alignment_matrix(src_normalized, tgt_normalized, InputManager.cost)
+    # print formatted edit distance table showing numbers
+    print('Edit Distance Table:')
+    InputManager.print_matrix_format(M, src_normalized, tgt_normalized)
+    print()
 
-        # print formatted edit distance table showing numbers
-        print('Edit Distance Table:')
-        InputManager.print_matrix_format(M, src_normalized, tgt_normalized)
+    # print formatted edit distance table showing numbers
+    print('Backtrace Table:')
+    InputManager.print_backtrace_format(M, src_normalized, tgt_normalized)
+    print()
+
+    # -------------------------------- Print Alignment Report ------------------------------------------
+    print('Maximum value in distance table: {0}'.format(max_score), end='\n\n')
+
+    # find max alignment locations in alignment matrix
+    locs = search.Search.search_matrix(M, max_score)
+    print('Maxima:')
+    for loc in locs:
+        print('\t[ {0}, {1} ]'.format(loc[0], loc[1]))
+
+    print('\nMaximal-similarity alignments:', end='\n\n')
+
+    for i, l in enumerate(locs):
+        r1 = ''
+        r2 = ''
+        r3 = ''
+        r1, r2, r3 = sq.StringTool.unpack_alignment(
+            M, l[0], l[1], src_normalized, tgt_normalized, r1, r2, r3, max_score)
+
+        print('\tAlignment {0} (length {1}):'.format(i, len(r1.split())))
+        print('\t\tSource at: ' + r1)
+        print('\t\tTarget at: ' + r2)
+        print('\t\tEdit action:' + r3)
         print()
-
-        # print formatted edit distance table showing numbers
-        print('Backtrace Table:')
-        InputManager.print_backtrace_format(M, src_normalized, tgt_normalized)
-        print()
-
-        # -------------------------------- Print Alignment Report ------------------------------------------
-        print('Maximum value in distance table: {0}'.format(max_score), end='\n\n')
-
-        # find max alignment locations in alignment matrix
-        locs = search.Search.search_matrix(M, max_score)
-        print('Maxima:')
-        for loc in locs:
-            print('\t[ {0}, {1} ]'.format(loc[0], loc[1]))
-
-        print('\nMaximal-similarity alignments:', end='\n\n')
-
-        for i, l in enumerate(locs):
-            r1 = ''
-            r2 = ''
-            r3 = ''
-            r1, r2, r3 = sq.StringTool.unpack_alignment(M, l[0], l[1], src_normalized, tgt_normalized, r1, r2, r3,
-                                                    max_score)
-
-            print('\tAlignment {0} (length {1}):'.format(i, len(r1.split())))
-            print('\t\tSource at: ' + r1)
-            print('\t\tTarget at: ' + r2)
-            print('\t\tEdit action:' + r3)
-            print()
