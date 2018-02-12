@@ -1,6 +1,6 @@
 import unittest
 
-import sequence
+from alignment import sequence
 
 
 class TestStringAlignment(unittest.TestCase):

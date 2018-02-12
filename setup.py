@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='sample-app',
+    name='alignment',
     version='1.0.0',
-    description='Step 1 tut',
+    description='',
     url='',
-    author='jb',
+    author='justin barry',
     packages=find_packages()
 )

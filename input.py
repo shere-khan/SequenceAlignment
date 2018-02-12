@@ -1,4 +1,5 @@
-import re, sequence as sq, search, sys
+import re, sys
+from alignment import sequence as sq, search
 
 """
 Author - Justin Barry
