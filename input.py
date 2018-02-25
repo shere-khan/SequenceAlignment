@@ -1,4 +1,4 @@
-import re, sys
+import re, sys, os
 from alignment import sequence as sq, search
 
 """
@@ -18,7 +18,7 @@ class InputManager:
 
     def tokenize(self):
         # open and read file
-        f = open(self.file, 'r')
+        f = open(get_file_location(self.file), 'r')
         c = f.read()
 
         # make all strings lowercase
@@ -221,6 +221,11 @@ class InputManager:
             print()
 
 
+def get_file_location(fn):
+    return os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(fn))) + '/' + fn
+
+
 if __name__ == '__main__':
     print('University of Central Florida')
     print('CAP6640 String 2018 - Dr. Glinos')
@@ -251,7 +256,8 @@ if __name__ == '__main__':
     print('\tTarget > {0}'.format(" ".join(tgt_normalized)), end='\n\n')
 
     # Get alignment
-    M, max_score = sq.StringTool.local_alignment_matrix(src_normalized, tgt_normalized, InputManager.cost)
+    M, max_score = sq.StringTool.local_alignment_matrix(src_normalized, tgt_normalized,
+                                                        InputManager.cost)
 
     # print formatted edit distance table showing numbers
     print('Edit Distance Table:')
@@ -263,7 +269,7 @@ if __name__ == '__main__':
     InputManager.print_backtrace_format(M, src_normalized, tgt_normalized)
     print()
 
-    # -------------------------------- Print Alignment Report ------------------------------------------
+    # -------------------------------- Print Alignment Report --------------------------
     print('Maximum value in distance table: {0}'.format(max_score), end='\n\n')
 
     # find max alignment locations in alignment matrix
